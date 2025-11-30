@@ -30,8 +30,14 @@ body {
   margin: 0 auto;
 }
 
-body[dir="rtl"], html[dir="rtl"] body {
+body[dir="rtl"],
+html[dir="rtl"] body {
   direction: rtl;
+}
+
+body[dir="rtl"] pre,
+html[dir="rtl"] body pre {
+  direction: ltr;
 }
 
 /* === Typography === */
@@ -221,6 +227,16 @@ article .meta {
 .prose blockquote {
   border-left: 3px solid var(--border);
   padding-left: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+html[dir="rtl"] .prose blockquote,
+body[dir="rtl"] .prose blockquote {
+  border-right: 3px solid var(--border);
+  padding-right: 1rem;
+  border-left: unset !important;
+  padding-left: unset !important;
   color: var(--text-muted);
   margin-bottom: 1.25rem;
 }
