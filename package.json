@@ -1,0 +1,23 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ophirbushi/website#readme",
+  "bugs": {
+    "url": "https://github.com/ophirbushi/website/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ophirbushi/website.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "static-server ./public"
+  },
+  "devDependencies": {
+    "static-server": "^2.2.1"
+  }
+}
