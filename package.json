@@ -15,9 +15,11 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "static-server ./public"
+    "start": "static-server ./public",
+    "build": "node ./scripts/build.js"
   },
   "devDependencies": {
-    "static-server": "^2.2.1"
+    "glob": "^13.0.0",
+    "static-server": "^3.0.0"
   }
 }
