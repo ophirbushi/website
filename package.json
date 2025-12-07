@@ -1,25 +1,12 @@
 {
-  "name": "website",
+  "name": "static-site-builder",
   "version": "1.0.0",
-  "description": "",
-  "homepage": "https://github.com/ophirbushi/website#readme",
-  "bugs": {
-    "url": "https://github.com/ophirbushi/website/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ophirbushi/website.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
-  "main": "index.js",
+  "description": "Simple static site with shared layouts and live reload",
   "scripts": {
-    "start": "static-server ./public",
-    "build": "node ./scripts/build.js"
+    "dev": "node scripts/dev.js",
+    "build": "node scripts/build.js",
+    "start": "npm run dev"
   },
-  "devDependencies": {
-    "glob": "^13.0.0",
-    "static-server": "^3.0.0"
-  }
+  "devDependencies": {},
+  "dependencies": {}
 }

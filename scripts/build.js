@@ -1,68 +1,144 @@
 const fs = require('fs');
 const path = require('path');
-const glob = require('glob');
 
-const srcDir = path.join(__dirname, '../src');
-const outDir = path.join(__dirname, '../public');
-const layoutPath = path.join(srcDir, '_layout.html');
+const SRC_DIR = path.join(__dirname, '../src');
+const PUBLIC_DIR = path.join(__dirname, '../public');
 
-// Remove public folder if it exists
-if (fs.existsSync(outDir)) {
-    fs.rmSync(outDir, { recursive: true, force: true });
-    console.log(`Removed ${outDir}`);
+// Helper to read file
+function readFile(filePath) {
+  return fs.readFileSync(filePath, 'utf-8');
 }
 
-// Create public folder
-fs.mkdirSync(outDir, { recursive: true });
-console.log(`Created ${outDir}`);
-
-// Copy style.css from src to public
-const styleSrc = path.join(srcDir, 'style.css');
-const styleDest = path.join(outDir, 'style.css');
-if (fs.existsSync(styleSrc)) {
-    fs.copyFileSync(styleSrc, styleDest);
-    console.log(`Copied style.css to ${styleDest}`);
+// Helper to ensure directory exists
+function ensureDir(dir) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
 }
 
-// Read the layout template
-const layout = fs.readFileSync(layoutPath, 'utf8');
+// Simple template engine
+function renderTemplate(content, layout, data = {}) {
+  // Replace {{content}} in layout with page content
+  let output = layout.replace('{{content}}', content);
+  
+  // Replace all {{key}} with data values
+  Object.keys(data).forEach(key => {
+    const regex = new RegExp(`{{${key}}}`, 'g');
+    output = output.replace(regex, data[key]);
+  });
+  
+  return output;
+}
 
-// Find all .html files except _layout.html
-const htmlFiles = glob.sync('**/*.html', {
-    cwd: srcDir,
-    nodir: true,
-    ignore: ['_layout.html']
-});
+// Process a single page
+function processPage(pagePath, layoutPath) {
+  const pageContent = readFile(pagePath);
+  
+  // Check if page specifies no layout (<!-- layout: none -->)
+  const layoutMatch = pageContent.match(/<!--\s*layout:\s*(.+?)\s*-->/);
+  const useLayout = !layoutMatch || layoutMatch[1].trim().toLowerCase() !== 'none';
+  
+  // If no layout, return content as-is
+  if (!useLayout) {
+    return pageContent;
+  }
+  
+  const layout = readFile(layoutPath);
+  
+  // Extract title from page (look for <!-- title: ... --> comment)
+  const titleMatch = pageContent.match(/<!--\s*title:\s*(.+?)\s*-->/);
+  const title = titleMatch ? titleMatch[1] : 'My Site';
+  
+  // Extract any other metadata
+  const descMatch = pageContent.match(/<!--\s*description:\s*(.+?)\s*-->/);
+  const description = descMatch ? descMatch[1] : '';
+  
+  // Render the page
+  return renderTemplate(pageContent, layout, {
+    title,
+    description,
+    year: new Date().getFullYear()
+  });
+}
 
-htmlFiles.forEach(relPath => {
-    if (relPath === '_layout.html') return;
-    const filePath = path.join(srcDir, relPath);
-    const outPath = path.join(outDir, relPath);
+// Copy static assets
+function copyAssets() {
+  const stylesDir = path.join(SRC_DIR, 'styles');
+  const publicStylesDir = path.join(PUBLIC_DIR, 'styles');
+  
+  ensureDir(publicStylesDir);
+  
+  if (fs.existsSync(stylesDir)) {
+    const files = fs.readdirSync(stylesDir);
+    files.forEach(file => {
+      fs.copyFileSync(
+        path.join(stylesDir, file),
+        path.join(publicStylesDir, file)
+      );
+    });
+  }
+}
 
-    // Ensure output directory exists
-    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+// Build all pages
+function build() {
+  console.log('🔨 Building site...');
+  
+  // Ensure public directory exists
+  ensureDir(PUBLIC_DIR);
+  
+  // Get layout
+  const layoutPath = path.join(SRC_DIR, 'layouts', 'main.html');
+  if (!fs.existsSync(layoutPath)) {
+    console.error('❌ Layout file not found:', layoutPath);
+    return;
+  }
+  
+  // Process all pages
+  const pagesDir = path.join(SRC_DIR, 'pages');
+  if (!fs.existsSync(pagesDir)) {
+    console.error('❌ Pages directory not found:', pagesDir);
+    return;
+  }
+  
+  const pages = fs.readdirSync(pagesDir).filter(f => f.endsWith('.html'));
+  
+  pages.forEach(page => {
+    const pagePath = path.join(pagesDir, page);
+    const outputPath = path.join(PUBLIC_DIR, page);
+    
+    const rendered = processPage(pagePath, layoutPath);
+    fs.writeFileSync(outputPath, rendered);
+    
+    console.log(`✅ Built: ${page}`);
+  });
+  
+  // Process all posts
+  const postsDir = path.join(SRC_DIR, 'posts');
+  if (fs.existsSync(postsDir)) {
+    const publicPostsDir = path.join(PUBLIC_DIR, 'posts');
+    ensureDir(publicPostsDir);
+    
+    const posts = fs.readdirSync(postsDir).filter(f => f.endsWith('.html'));
+    
+    posts.forEach(post => {
+      const postPath = path.join(postsDir, post);
+      const outputPath = path.join(publicPostsDir, post);
+      
+      const rendered = processPage(postPath, layoutPath);
+      fs.writeFileSync(outputPath, rendered);
+      
+      console.log(`✅ Built post: ${post}`);
+    });
+  }
+  
+  // Copy assets
+  copyAssets();
+  console.log('✅ Copied styles');
+  
+  console.log('🎉 Build complete!');
+}
 
-    const content = fs.readFileSync(filePath, 'utf8');
+// Run build
+build();
 
-    // Extract title from <title> tag if present, else use filename
-    let titleMatch = content.match(/<title>(.*?)<\/title>/);
-    let title = titleMatch ? titleMatch[1] : path.basename(relPath, '.html');
-
-    // Remove DOCTYPE, html, head, body tags from content
-    let mainContent = content
-        .replace(/<!DOCTYPE[^>]*>/i, '')
-        .replace(/<html[^>]*>/i, '')
-        .replace(/<head>[\s\S]*?<\/head>/i, '')
-        .replace(/<body[^>]*>/i, '')
-        .replace(/<\/body>/i, '')
-        .replace(/<\/html>/i, '')
-        .trim();
-
-    // Replace placeholders in layout
-    const output = layout
-        .replace('{{title}}', title)
-        .replace('{{content}}', mainContent);
-
-    fs.writeFileSync(outPath, output);
-    console.log(`Built ${outPath}`);
-});
+module.exports = { build };
