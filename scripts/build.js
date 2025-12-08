@@ -20,6 +20,73 @@ function ensureDir(dir) {
   }
 }
 
+// Extract metadata from HTML comments
+function extractMetadata(content) {
+  const metadata = {};
+  
+  const titleMatch = content.match(/<!--\s*title:\s*(.+?)\s*-->/);
+  if (titleMatch) metadata.title = titleMatch[1];
+  
+  const dateMatch = content.match(/<!--\s*date:\s*(.+?)\s*-->/);
+  if (dateMatch) metadata.date = dateMatch[1];
+  
+  const excerptMatch = content.match(/<!--\s*excerpt:\s*(.+?)\s*-->/);
+  if (excerptMatch) metadata.excerpt = excerptMatch[1];
+  
+  const descMatch = content.match(/<!--\s*description:\s*(.+?)\s*-->/);
+  if (descMatch) metadata.description = descMatch[1];
+  
+  return metadata;
+}
+
+// Scan posts directory and get all posts with metadata
+function scanPosts() {
+  const postsDir = path.join(SRC_DIR, 'posts');
+  
+  if (!fs.existsSync(postsDir)) {
+    return [];
+  }
+  
+  const posts = fs.readdirSync(postsDir)
+    .filter(f => f.endsWith('.html'))
+    .map(filename => {
+      const filePath = path.join(postsDir, filename);
+      const content = readFile(filePath);
+      const metadata = extractMetadata(content);
+      
+      return {
+        filename,
+        slug: filename.replace('.html', ''),
+        url: `/posts/${filename}`,
+        title: metadata.title || filename.replace('.html', ''),
+        date: metadata.date || '',
+        excerpt: metadata.excerpt || '',
+        ...metadata
+      };
+    })
+    .sort((a, b) => {
+      // Sort by date descending (newest first)
+      if (!a.date || !b.date) return 0;
+      return new Date(b.date) - new Date(a.date);
+    });
+  
+  return posts;
+}
+
+// Generate HTML for post list
+function generatePostList(posts, limit = null) {
+  const postsToShow = limit ? posts.slice(0, limit) : posts;
+  
+  return `<ul class="post-list">
+${postsToShow.map(post => `  <li>
+    <a href="${post.url}">
+      <span class="post-title">${post.title}</span>
+      <span class="post-date">${post.date}</span>
+    </a>
+  </li>`).join('\n')}
+</ul>`;
+}
+
 // Load a partial from the partials directory
 function loadPartial(name) {
   // Check cache first
@@ -49,6 +116,17 @@ function processPartials(content) {
   });
 }
 
+// Process post lists in content
+function processPostLists(content, posts) {
+  // Match {{posts}} or {{posts:N}} patterns
+  content = content.replace(/\{\{posts(?::(\d+))?\}\}/g, (match, limit) => {
+    const maxPosts = limit ? parseInt(limit) : null;
+    return generatePostList(posts, maxPosts);
+  });
+  
+  return content;
+}
+
 // Simple template engine
 function renderTemplate(content, layout, data = {}) {
   // First, process partials in the content
@@ -70,30 +148,30 @@ function renderTemplate(content, layout, data = {}) {
 }
 
 // Process a single page
-function processPage(pagePath, layoutPath) {
+function processPage(pagePath, layoutPath, posts = []) {
   const pageContent = readFile(pagePath);
 
   // Check if page specifies no layout (<!-- layout: none -->)
   const layoutMatch = pageContent.match(/<!--\s*layout:\s*(.+?)\s*-->/);
   const useLayout = !layoutMatch || layoutMatch[1].trim().toLowerCase() !== 'none';
 
+  // Process post lists first
+  let processedContent = processPostLists(pageContent, posts);
+
   // If no layout, still process partials
   if (!useLayout) {
-    return processPartials(pageContent);
+    return processPartials(processedContent);
   }
 
   const layout = readFile(layoutPath);
 
-  // Extract title from page (look for <!-- title: ... --> comment)
-  const titleMatch = pageContent.match(/<!--\s*title:\s*(.+?)\s*-->/);
-  const title = titleMatch ? titleMatch[1] : 'My Site';
-
-  // Extract any other metadata
-  const descMatch = pageContent.match(/<!--\s*description:\s*(.+?)\s*-->/);
-  const description = descMatch ? descMatch[1] : '';
+  // Extract metadata
+  const metadata = extractMetadata(processedContent);
+  const title = metadata.title || 'My Site';
+  const description = metadata.description || '';
 
   // Render the page
-  return renderTemplate(pageContent, layout, {
+  return renderTemplate(processedContent, layout, {
     title,
     description,
     year: new Date().getFullYear()
@@ -128,6 +206,10 @@ function build() {
   // Ensure public directory exists
   ensureDir(PUBLIC_DIR);
 
+  // Scan all posts first
+  const posts = scanPosts();
+  console.log(`📝 Found ${posts.length} posts`);
+
   // Get layout
   const layoutPath = path.join(SRC_DIR, 'layouts', 'main.html');
   if (!fs.existsSync(layoutPath)) {
@@ -148,7 +230,7 @@ function build() {
     const pagePath = path.join(pagesDir, page);
     const outputPath = path.join(PUBLIC_DIR, page);
 
-    const rendered = processPage(pagePath, layoutPath);
+    const rendered = processPage(pagePath, layoutPath, posts);
     fs.writeFileSync(outputPath, rendered);
 
     console.log(`✅ Built: ${page}`);
@@ -160,13 +242,13 @@ function build() {
     const publicPostsDir = path.join(PUBLIC_DIR, 'posts');
     ensureDir(publicPostsDir);
 
-    const posts = fs.readdirSync(postsDir).filter(f => f.endsWith('.html'));
+    const postFiles = fs.readdirSync(postsDir).filter(f => f.endsWith('.html'));
 
-    posts.forEach(post => {
+    postFiles.forEach(post => {
       const postPath = path.join(postsDir, post);
       const outputPath = path.join(publicPostsDir, post);
 
-      const rendered = processPage(postPath, layoutPath);
+      const rendered = processPage(postPath, layoutPath, posts);
       fs.writeFileSync(outputPath, rendered);
 
       console.log(`✅ Built post: ${post}`);
