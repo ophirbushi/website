@@ -99,15 +99,16 @@ nav {
 
 .nav-links {
     display: flex;
+    align-items: center;
     gap: 1.5rem;
 }
 
-.nav-links a {
+.nav-links>a {
     color: var(--text-muted);
     position: relative;
 }
 
-.nav-links a::after {
+.nav-links>a::after {
     content: '';
     position: absolute;
     bottom: -2px;
@@ -118,12 +119,12 @@ nav {
     transition: width 0.3s ease;
 }
 
-.nav-links a:hover {
+.nav-links>a:hover {
     color: var(--text);
     text-decoration: none;
 }
 
-.nav-links a:hover::after {
+.nav-links>a:hover::after {
     width: 100%;
 }
 
@@ -370,4 +371,101 @@ footer {
         align-items: flex-start;
         gap: 0.25rem;
     }
+}
+
+
+
+
+
+/* ...existing code... */
+
+/* Search */
+.search-container {
+    position: relative;
+    max-width: 600px;
+    /* margin: 2rem auto; */
+}
+
+#search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    transition: border-color 0.2s;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    max-height: 400px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.search-results a {
+    text-decoration: none;
+}
+
+.search-results.hidden {
+    display: none;
+}
+
+.search-result-item {
+    display: block;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color 0.2s;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.search-result-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.search-result-excerpt {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.search-result-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.no-results {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+mark {
+    background-color: #ffeb3b;
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 2px;
 }

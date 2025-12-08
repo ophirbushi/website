@@ -202,20 +202,53 @@ function processPage(pagePath, layoutPath, posts = [], postData = null) {
 
 // Copy static assets
 function copyAssets() {
-  const stylesDir = path.join(SRC_DIR, 'styles');
-  const publicStylesDir = path.join(PUBLIC_DIR, 'styles');
+  const assetDirs = ['styles', 'js'];
 
-  ensureDir(publicStylesDir);
+  for (let dirName of assetDirs) {
+    const assetsDir = path.join(SRC_DIR, dirName);
+    const publicDir = path.join(PUBLIC_DIR, dirName);
 
-  if (fs.existsSync(stylesDir)) {
-    const files = fs.readdirSync(stylesDir);
-    files.forEach(file => {
-      fs.copyFileSync(
-        path.join(stylesDir, file),
-        path.join(publicStylesDir, file)
-      );
-    });
+    ensureDir(publicDir);
+
+    if (fs.existsSync(assetsDir)) {
+      const files = fs.readdirSync(assetsDir);
+      files.forEach(file => {
+        fs.copyFileSync(
+          path.join(assetsDir, file),
+          path.join(publicDir, file)
+        );
+      });
+    }
   }
+}
+
+// Generate posts JSON for client-side search
+function generatePostsJson(posts) {
+  const searchData = posts.map(post => {
+    // Read the post content to include in search
+    const postPath = path.join(SRC_DIR, 'posts', post.filename);
+    const content = readFile(postPath);
+
+    // Strip HTML tags for plain text search
+    const plainText = content
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    return {
+      title: post.title,
+      url: post.url,
+      date: post.date,
+      excerpt: post.excerpt,
+      content: plainText.substring(0, 1000) // Limit content length
+    };
+  });
+
+  const jsonPath = path.join(PUBLIC_DIR, 'posts.json');
+  fs.writeFileSync(jsonPath, JSON.stringify(searchData, null, 2));
+  console.log('✅ Generated posts.json');
 }
 
 // Build all pages
@@ -231,6 +264,9 @@ function build() {
   // Scan all posts first
   const posts = scanPosts();
   console.log(`📝 Found ${posts.length} posts`);
+
+  // Generate posts JSON for search
+  generatePostsJson(posts);
 
   // Get layout
   const layoutPath = path.join(SRC_DIR, 'layouts', 'main.html');
