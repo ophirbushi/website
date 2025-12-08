@@ -23,37 +23,52 @@ function ensureDir(dir) {
 // Extract metadata from HTML comments
 function extractMetadata(content) {
   const metadata = {};
-  
+
   const titleMatch = content.match(/<!--\s*title:\s*(.+?)\s*-->/);
   if (titleMatch) metadata.title = titleMatch[1];
-  
+
   const dateMatch = content.match(/<!--\s*date:\s*(.+?)\s*-->/);
   if (dateMatch) metadata.date = dateMatch[1];
-  
+
   const excerptMatch = content.match(/<!--\s*excerpt:\s*(.+?)\s*-->/);
   if (excerptMatch) metadata.excerpt = excerptMatch[1];
-  
+
   const descMatch = content.match(/<!--\s*description:\s*(.+?)\s*-->/);
   if (descMatch) metadata.description = descMatch[1];
-  
+
   return metadata;
+}
+
+// Format date for display (Hebrew format)
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+
+  const date = new Date(dateStr);
+  const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
+    'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${day} ב${month} ${year}`;
 }
 
 // Scan posts directory and get all posts with metadata
 function scanPosts() {
   const postsDir = path.join(SRC_DIR, 'posts');
-  
+
   if (!fs.existsSync(postsDir)) {
     return [];
   }
-  
+
   const posts = fs.readdirSync(postsDir)
     .filter(f => f.endsWith('.html'))
     .map(filename => {
       const filePath = path.join(postsDir, filename);
       const content = readFile(filePath);
       const metadata = extractMetadata(content);
-      
+
       return {
         filename,
         slug: filename.replace('.html', ''),
@@ -69,14 +84,14 @@ function scanPosts() {
       if (!a.date || !b.date) return 0;
       return new Date(b.date) - new Date(a.date);
     });
-  
+
   return posts;
 }
 
 // Generate HTML for post list
 function generatePostList(posts, limit = null) {
   const postsToShow = limit ? posts.slice(0, limit) : posts;
-  
+
   return `<ul class="post-list">
 ${postsToShow.map(post => `  <li>
     <a href="${post.url}">
@@ -123,7 +138,7 @@ function processPostLists(content, posts) {
     const maxPosts = limit ? parseInt(limit) : null;
     return generatePostList(posts, maxPosts);
   });
-  
+
   return content;
 }
 
@@ -148,7 +163,7 @@ function renderTemplate(content, layout, data = {}) {
 }
 
 // Process a single page
-function processPage(pagePath, layoutPath, posts = []) {
+function processPage(pagePath, layoutPath, posts = [], postData = null) {
   const pageContent = readFile(pagePath);
 
   // Check if page specifies no layout (<!-- layout: none -->)
@@ -157,6 +172,13 @@ function processPage(pagePath, layoutPath, posts = []) {
 
   // Process post lists first
   let processedContent = processPostLists(pageContent, posts);
+
+  // If this is a post, inject post variables
+  if (postData) {
+    processedContent = processedContent.replace(/\{\{post\.title\}\}/g, postData.title);
+    processedContent = processedContent.replace(/\{\{post\.date\}\}/g, formatDate(postData.date));
+    processedContent = processedContent.replace(/\{\{post\.excerpt\}\}/g, postData.excerpt || '');
+  }
 
   // If no layout, still process partials
   if (!useLayout) {
@@ -248,7 +270,10 @@ function build() {
       const postPath = path.join(postsDir, post);
       const outputPath = path.join(publicPostsDir, post);
 
-      const rendered = processPage(postPath, layoutPath, posts);
+      // Find the post metadata
+      const postData = posts.find(p => p.filename === post);
+
+      const rendered = processPage(postPath, layoutPath, posts, postData);
       fs.writeFileSync(outputPath, rendered);
 
       console.log(`✅ Built post: ${post}`);
