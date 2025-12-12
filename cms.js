@@ -189,27 +189,31 @@ app.get('/edit/:filename', async (req, res) => {
           body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
-            padding: 2rem;
+            padding: 0.5rem;
           }
           .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            padding: 2rem;
+            border-radius: 8px;
+            padding: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: calc(100vh - 1rem);
+            display: flex;
+            flex-direction: column;
           }
           .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
             border-bottom: 2px solid #eee;
+            flex-shrink: 0;
           }
           h1 {
             color: #667eea;
-            font-size: 2rem;
+            font-size: 1.3rem;
           }
           .back-link {
             text-decoration: none;
@@ -226,19 +230,42 @@ app.get('/edit/:filename', async (req, res) => {
           .form-group {
             margin-bottom: 1.5rem;
           }
+          .metadata-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 3fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            flex-shrink: 0;
+          }
+          .metadata-row .form-group {
+            margin-bottom: 0;
+          }
+          #editForm {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+          }
+          .editor-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+          }
           label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             font-weight: 600;
             color: #333;
+            font-size: 0.9rem;
           }
           input[type="text"],
           textarea {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.5rem;
             border: 2px solid #ddd;
             border-radius: 6px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-family: inherit;
             transition: border-color 0.2s;
           }
@@ -247,10 +274,15 @@ app.get('/edit/:filename', async (req, res) => {
             outline: none;
             border-color: #667eea;
           }
+          #excerpt {
+            resize: vertical;
+            min-height: 2.5rem;
+          }
           .button-group {
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            flex-shrink: 0;
           }
           button {
             padding: 0.75rem 1.5rem;
@@ -314,24 +346,30 @@ app.get('/edit/:filename', async (req, res) => {
           <form id="editForm">
             <input type="hidden" name="filename" value="${filename}">
             
-            <div class="form-group">
-              <label for="title">כותרת:</label>
-              <input type="text" id="title" name="title" value="${metadata.title}" required>
+            <div class="metadata-row">
+              <div class="form-group">
+                <label for="title">כותרת</label>
+                <input type="text" id="title" name="title" value="${metadata.title}" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="date">תאריך</label>
+                <input type="text" id="date" name="date" value="${metadata.date}" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="excerpt">תקציר</label>
+                <textarea id="excerpt" name="excerpt" rows="1" required>${metadata.excerpt}</textarea>
+              </div>
             </div>
             
-            <div class="form-group">
-              <label for="date">תאריך:</label>
-              <input type="text" id="date" name="date" value="${metadata.date}" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="excerpt">תקציר:</label>
-              <textarea id="excerpt" name="excerpt" rows="3" required>${metadata.excerpt}</textarea>
-            </div>
-            
-            <div class="form-group">
-              <label for="content">תוכן:</label>
-              <textarea id="content" name="content">${mainContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+            <div class="editor-wrapper">
+              <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
+                <label for="content">תוכן</label>
+                <div style="flex: 1; min-height: 0;">
+                  <textarea id="content" name="content">${mainContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                </div>
+              </div>
             </div>
             
             <div class="button-group">
@@ -349,7 +387,7 @@ app.get('/edit/:filename', async (req, res) => {
             selector: '#content',
             directionality: 'rtl',
             language: 'he_IL',
-            height: 500,
+            height: '100%',
             menubar: true,
             plugins: [
               'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
