@@ -359,7 +359,7 @@ app.get('/edit/:filename', async (req, res) => {
               
               <div class="form-group">
                 <label for="excerpt">תקציר</label>
-                <textarea id="excerpt" name="excerpt" rows="1" required>${metadata.excerpt}</textarea>
+                <textarea id="excerpt" name="excerpt" rows="2" required>${metadata.excerpt}</textarea>
               </div>
             </div>
             
@@ -386,7 +386,6 @@ app.get('/edit/:filename', async (req, res) => {
           tinymce.init({
             selector: '#content',
             directionality: 'rtl',
-            language: 'he_IL',
             height: '100%',
             menubar: true,
             plugins: [
