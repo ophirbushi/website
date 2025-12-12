@@ -5,8 +5,12 @@
   "scripts": {
     "dev": "node scripts/dev.js",
     "build": "node scripts/build.js",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "cms": "node cms.js"
   },
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.18.2",
+    "@anthropic-ai/sdk": "^0.27.0"
+  }
 }
