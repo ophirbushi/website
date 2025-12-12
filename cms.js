@@ -398,7 +398,74 @@ app.get('/edit/:filename', async (req, res) => {
               'bold italic forecolor | alignleft aligncenter ' +
               'alignright alignjustify | bullist numlist outdent indent | ' +
               'removeformat | code | help',
-            content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; direction: rtl; }',
+            content_style: \`
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                line-height: 1.7;
+                color: #1a1a1a;
+                background: #fafafa;
+                padding: 1rem;
+                direction: rtl;
+              }
+              p { margin-bottom: 1.25rem; }
+              h1 {
+                font-size: 1.75rem;
+                font-weight: 600;
+                line-height: 1.3;
+                margin-bottom: 0.5rem;
+              }
+              h2 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                line-height: 1.3;
+                margin: 2rem 0 1rem;
+                color: #1a1a1a;
+              }
+              h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                line-height: 1.3;
+                margin-bottom: 1rem;
+                color: #666;
+              }
+              a {
+                color: #0066cc;
+                text-decoration: underline;
+              }
+              code {
+                background: #f0f0f0;
+                padding: 0.15rem 0.4rem;
+                border-radius: 3px;
+                font-size: 0.9em;
+              }
+              pre {
+                background: #f0f0f0;
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+                margin-bottom: 1.25rem;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+                direction: ltr;
+              }
+              pre code {
+                background: none;
+                padding: 0;
+              }
+              ul, ol {
+                margin-bottom: 1.25rem;
+                padding-right: 1.5rem;
+              }
+              blockquote {
+                border-right: 3px solid #e0e0e0;
+                padding-right: 1rem;
+                color: #666;
+                margin-bottom: 1.25rem;
+              }
+              img {
+                max-width: 100%;
+                margin-bottom: 2rem;
+              }
+            \`,
             language_url: 'https://cdn.jsdelivr.net/npm/tinymce-lang/langs/he_IL.js'
           });
 
