@@ -20,18 +20,43 @@ function parseMetadata(content) {
   const metadata = {
     title: '',
     date: '',
-    excerpt: ''
+    excerpt: '',
+    tags: ''
   };
   
   const titleMatch = content.match(/<!--\s*title:\s*(.+?)\s*-->/);
   const dateMatch = content.match(/<!--\s*date:\s*(.+?)\s*-->/);
   const excerptMatch = content.match(/<!--\s*excerpt:\s*(.+?)\s*-->/);
+  const tagsMatch = content.match(/<!--\s*tags:\s*(.+?)\s*-->/);
   
   if (titleMatch) metadata.title = titleMatch[1];
   if (dateMatch) metadata.date = dateMatch[1];
   if (excerptMatch) metadata.excerpt = excerptMatch[1];
+  if (tagsMatch) metadata.tags = tagsMatch[1];
   
   return metadata;
+}
+
+// Convert DD-MM-YYYY to YYYY-MM-DD for date input
+function formatDateForInput(dateStr) {
+  if (!dateStr) return '';
+  const match = dateStr.match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
+  if (match) {
+    const [, day, month, year] = match;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+  return dateStr;
+}
+
+// Convert YYYY-MM-DD to DD-MM-YYYY for storage
+function formatDateForStorage(dateStr) {
+  if (!dateStr) return '';
+  const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    const [, year, month, day] = match;
+    return `${parseInt(day)}-${parseInt(month)}-${year}`;
+  }
+  return dateStr;
 }
 
 // Extract main content (everything after metadata comments)
@@ -40,16 +65,22 @@ function extractContent(content) {
   let cleaned = content.replace(/<!--\s*title:\s*.+?\s*-->\s*/g, '');
   cleaned = cleaned.replace(/<!--\s*date:\s*.+?\s*-->\s*/g, '');
   cleaned = cleaned.replace(/<!--\s*excerpt:\s*.+?\s*-->\s*/g, '');
+  cleaned = cleaned.replace(/<!--\s*tags:\s*.+?\s*-->\s*/g, '');
   return cleaned.trim();
 }
 
 // Reconstruct file with metadata and content
 function reconstructFile(metadata, content) {
-  return `<!-- title: ${metadata.title} -->
+  let result = `<!-- title: ${metadata.title} -->
 <!-- date: ${metadata.date} -->
-<!-- excerpt: ${metadata.excerpt} -->
-
-${content}`;
+<!-- excerpt: ${metadata.excerpt} -->`;
+  
+  if (metadata.tags) {
+    result += `\n<!-- tags: ${metadata.tags} -->`;
+  }
+  
+  result += `\n\n${content}`;
+  return result;
 }
 
 // Dashboard - List all posts
@@ -138,6 +169,25 @@ app.get('/', async (req, res) => {
             margin-top: 0.5rem;
             font-family: monospace;
           }
+          .new-post-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: #667eea;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+          }
+          .new-post-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+          }
         </style>
       </head>
       <body>
@@ -153,6 +203,7 @@ app.get('/', async (req, res) => {
               </a>
             `).join('')}
           </div>
+          <a href="/new" class="new-post-btn">+ מאמר חדש</a>
         </div>
       </body>
       </html>
@@ -162,14 +213,56 @@ app.get('/', async (req, res) => {
   }
 });
 
+// New article page
+app.get('/new', async (req, res) => {
+  const timestamp = Date.now();
+  const filename = `new-article-${timestamp}.html`;
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  
+  const metadata = {
+    title: 'מאמר חדש',
+    date: formatDateForStorage(today),
+    excerpt: '',
+    tags: ''
+  };
+  
+  const mainContent = `<article>
+    <header>
+        <h1>{{post.title}}</h1>
+        <p class="meta">{{post.date}}</p>
+    </header>
+    
+    <div class="prose">
+        <p>התחל לכתוב כאן...</p>
+    </div>
+</article>`;
+  
+  // Redirect to edit page for the new file
+  res.redirect(`/edit/${filename}?new=true&content=${encodeURIComponent(mainContent)}&title=${encodeURIComponent(metadata.title)}&date=${encodeURIComponent(metadata.date)}&excerpt=${encodeURIComponent(metadata.excerpt)}&tags=${encodeURIComponent(metadata.tags)}`);
+});
+
 // Editor page
 app.get('/edit/:filename', async (req, res) => {
   try {
     const filename = req.params.filename;
     const filePath = path.join(POSTS_DIR, filename);
-    const content = await fs.readFile(filePath, 'utf-8');
-    const metadata = parseMetadata(content);
-    const mainContent = extractContent(content);
+    
+    let metadata, mainContent;
+    
+    // Check if this is a new article
+    if (req.query.new === 'true') {
+      metadata = {
+        title: req.query.title || '',
+        date: req.query.date || '',
+        excerpt: req.query.excerpt || '',
+        tags: req.query.tags || ''
+      };
+      mainContent = decodeURIComponent(req.query.content || '');
+    } else {
+      const content = await fs.readFile(filePath, 'utf-8');
+      metadata = parseMetadata(content);
+      mainContent = extractContent(content);
+    }
 
     res.send(`
       <!DOCTYPE html>
@@ -232,7 +325,7 @@ app.get('/edit/:filename', async (req, res) => {
           }
           .metadata-row {
             display: grid;
-            grid-template-columns: 2fr 1fr 3fr;
+            grid-template-columns: 2fr 1fr 3fr 2fr;
             gap: 0.75rem;
             margin-bottom: 0.75rem;
             flex-shrink: 0;
@@ -354,12 +447,17 @@ app.get('/edit/:filename', async (req, res) => {
               
               <div class="form-group">
                 <label for="date">תאריך</label>
-                <input type="text" id="date" name="date" value="${metadata.date}" required>
+                <input type="date" id="date" name="date" value="${formatDateForInput(metadata.date)}" required>
               </div>
               
               <div class="form-group">
                 <label for="excerpt">תקציר</label>
-                <textarea id="excerpt" name="excerpt" rows="2" required>${metadata.excerpt}</textarea>
+                <textarea id="excerpt" name="excerpt" rows="1" required>${metadata.excerpt}</textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="tags">תגיות</label>
+                <input type="text" id="tags" name="tags" value="${metadata.tags || ''}" placeholder="תג1, תג2, תג3">
               </div>
             </div>
             
@@ -520,6 +618,7 @@ app.get('/edit/:filename', async (req, res) => {
               title: document.getElementById('title').value,
               date: document.getElementById('date').value,
               excerpt: document.getElementById('excerpt').value,
+              tags: document.getElementById('tags').value,
               content: tinymce.get('content').getContent()
             };
             
@@ -582,10 +681,11 @@ ${content}`
 // API: Save post
 app.post('/api/save', async (req, res) => {
   try {
-    const { filename, title, date, excerpt, content } = req.body;
+    const { filename, title, date, excerpt, tags, content } = req.body;
     
     const filePath = path.join(POSTS_DIR, filename);
-    const fileContent = reconstructFile({ title, date, excerpt }, content);
+    const formattedDate = formatDateForStorage(date);
+    const fileContent = reconstructFile({ title, date: formattedDate, excerpt, tags }, content);
     
     await fs.writeFile(filePath, fileContent, 'utf-8');
     
