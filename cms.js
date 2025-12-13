@@ -493,8 +493,7 @@ app.get('/edit/:filename', async (req, res) => {
             ],
             toolbar: 'undo redo | blocks | ' +
               'bold italic forecolor | alignleft aligncenter ' +
-              'alignright alignjustify | bullist numlist outdent indent | ' +
-              'removeformat | code | help',
+              'alignright alignjustify | bullist numlist outdent indent | fullscreen',
             content_style: \`
               body {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
