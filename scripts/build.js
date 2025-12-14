@@ -63,6 +63,46 @@ function formatDate(dateStr) {
   return `${day} ב${monthName} ${year}`;
 }
 
+// Recursively find all posts in directory and subdirectories
+function findPostsRecursively(dir, baseDir, prefix = '') {
+  const results = [];
+  
+  if (!fs.existsSync(dir)) {
+    return results;
+  }
+
+  const items = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const item of items) {
+    const fullPath = path.join(dir, item.name);
+    
+    if (item.isDirectory()) {
+      // Recursively scan subdirectories
+      const newPrefix = prefix ? `${prefix}-${item.name}` : item.name;
+      results.push(...findPostsRecursively(fullPath, baseDir, newPrefix));
+    } else if (item.name.endsWith('.html') || item.name.endsWith('.md')) {
+      // Get relative path from baseDir for reference
+      const relativePath = path.relative(baseDir, fullPath);
+      
+      // Generate output filename with folder prefix
+      const baseFilename = item.name.replace(/\.(html|md)$/, '');
+      const outputFilename = prefix 
+        ? `${prefix}-${baseFilename}.html`
+        : `${baseFilename}.html`;
+      
+      results.push({
+        sourcePath: fullPath,
+        relativePath,
+        filename: item.name,
+        outputFilename,
+        prefix
+      });
+    }
+  }
+
+  return results;
+}
+
 // Scan posts directory and get all posts with metadata
 function scanPosts() {
   const postsDir = path.join(SRC_DIR, 'posts');
@@ -71,36 +111,33 @@ function scanPosts() {
     return [];
   }
 
-  const posts = fs.readdirSync(postsDir)
-    .filter(f => f.endsWith('.html') || f.endsWith('.md'))
-    .map(filename => {
-      const filePath = path.join(postsDir, filename);
-      const content = readFile(filePath);
-      const isMarkdown = filename.endsWith('.md');
-      const metadata = extractMetadata(content, isMarkdown);
-      
-      // Generate output filename (always .html)
-      const outputFilename = isMarkdown 
-        ? filename.replace('.md', '.html')
-        : filename;
+  // Find all posts recursively
+  const postFiles = findPostsRecursively(postsDir, postsDir);
 
-      return {
-        filename,
-        outputFilename,
-        isMarkdown,
-        slug: filename.replace(/\.(html|md)$/, ''),
-        url: `/posts/${outputFilename}`,
-        title: metadata.title || filename.replace(/\.(html|md)$/, ''),
-        date: metadata.date || '',
-        excerpt: metadata.excerpt || '',
-        ...metadata
-      };
-    })
-    .sort((a, b) => {
-      // Sort by date descending (newest first)
-      if (!a.date || !b.date) return 0;
-      return new Date(b.date) - new Date(a.date);
-    });
+  const posts = postFiles.map(postFile => {
+    const content = readFile(postFile.sourcePath);
+    const isMarkdown = postFile.filename.endsWith('.md');
+    const metadata = extractMetadata(content, isMarkdown);
+
+    return {
+      filename: postFile.filename,
+      sourcePath: postFile.sourcePath,
+      relativePath: postFile.relativePath,
+      outputFilename: postFile.outputFilename,
+      isMarkdown,
+      slug: postFile.filename.replace(/\.(html|md)$/, ''),
+      url: `/posts/${postFile.outputFilename}`,
+      title: metadata.title || postFile.filename.replace(/\.(html|md)$/, ''),
+      date: metadata.date || '',
+      excerpt: metadata.excerpt || '',
+      ...metadata
+    };
+  })
+  .sort((a, b) => {
+    // Sort by date descending (newest first)
+    if (!a.date || !b.date) return 0;
+    return new Date(b.date) - new Date(a.date);
+  });
 
   return posts;
 }
@@ -288,9 +325,8 @@ function copyAssets() {
 // Generate posts JSON for client-side search
 function generatePostsJson(posts) {
   const searchData = posts.map(post => {
-    // Read the post content to include in search
-    const postPath = path.join(SRC_DIR, 'posts', post.filename);
-    const content = readFile(postPath);
+    // Read the post content using sourcePath (which includes the full path)
+    const content = readFile(post.sourcePath);
     
     let plainText;
     if (post.isMarkdown) {
@@ -371,13 +407,13 @@ function build() {
     ensureDir(publicPostsDir);
 
     posts.forEach(postData => {
-      const postPath = path.join(postsDir, postData.filename);
+      // Use sourcePath for reading the post content
+      const rendered = processPage(postData.sourcePath, layoutPath, posts, postData);
       const outputPath = path.join(publicPostsDir, postData.outputFilename);
-
-      const rendered = processPage(postPath, layoutPath, posts, postData);
+      
       fs.writeFileSync(outputPath, rendered);
 
-      console.log(`✅ Built post: ${postData.filename} → ${postData.outputFilename}`);
+      console.log(`✅ Built post: ${postData.relativePath} → ${postData.outputFilename}`);
     });
   }
 
