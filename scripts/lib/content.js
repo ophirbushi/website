@@ -153,7 +153,7 @@ function scanPosts(srcDir) {
   return posts;
 }
 
-var// Generate HTML for post list (simple list for blog page)
+// Generate HTML for post list (simple list for blog page)
 function generatePostList(posts, limit = null) {
   const postsToShow = limit ? posts.slice(0, limit) : posts;
 

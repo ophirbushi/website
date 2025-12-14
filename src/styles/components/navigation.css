@@ -4,10 +4,12 @@ nav {
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--space-xl);
-    padding-bottom: var(--space-sm);
+    padding: var(--space-md) var(--space-md) var(--space-sm);
     border-bottom: 1px solid var(--border);
     white-space: nowrap;
     gap: 1.5rem;
+    max-width: var(--max-width);
+    margin: 0 auto var(--space-xl);
 }
 
 .logo {

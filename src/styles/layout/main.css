@@ -1,6 +1,7 @@
 /* === Main Content Layout === */
 main {
     min-height: 58vh;
+    overflow-x: hidden;
 }
 
 /* Container for content that should respect max-width */
@@ -8,6 +9,18 @@ main {
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 var(--space-md);
+}
+
+/* Article and blog pages need container constraints */
+main > article,
+main > h1,
+main > p,
+main > ul.post-list {
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
 }
 
 /* Full-width sections */

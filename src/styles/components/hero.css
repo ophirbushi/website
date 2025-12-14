@@ -4,7 +4,7 @@
         var(--accent-light) 0%, 
         color-mix(in srgb, var(--accent-light) 50%, white 50%) 100%);
     padding: var(--space-xl) var(--space-md);
-    margin: calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) var(--space-xl);
+    margin-bottom: var(--space-xl);
     border-radius: 0 0 24px 24px;
     box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
 }
