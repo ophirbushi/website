@@ -18,7 +18,7 @@
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
-    
+
     /* Consistent spacing system */
     --space-xs: 0.5rem;
     --space-sm: 1rem;
@@ -76,12 +76,13 @@ h1 {
     font-size: 1.75rem;
     font-weight: 600;
     color: var(--text);
+    margin-bottom: var(--space-md);
 }
 
 h2 {
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
     color: var(--text-muted);
     position: relative;
     padding-left: 0.75rem;
@@ -653,6 +654,10 @@ article img {
 }
 
 
+.mb-md {
+    margin-bottom: var(--space-md);
+}
+
 
 
 /* === Footer === */
@@ -713,7 +718,7 @@ footer {
 }
 
 .footer-bottom {
-    padding-top: var(--space-md);
+    padding-top: 2rem;
     border-top: 1px solid var(--border);
     text-align: center;
 }
@@ -727,6 +732,74 @@ footer {
 @media (max-width: 600px) {
     .footer-content {
         grid-template-columns: 1fr;
-        gap: var(--space-md);
+        gap: 2rem;
+    }
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-about p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer-links a,
+.footer-social a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.footer-links a:hover,
+.footer-social a:hover {
+    color: var(--accent);
+    text-decoration: none;
+    /* transform: translateX(-3px); */
+}
+
+.footer-social {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Responsive footer */
+@media (max-width: 600px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 }

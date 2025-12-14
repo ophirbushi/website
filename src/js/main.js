@@ -42,15 +42,15 @@
     function formatDate(dateStr) {
         if (!dateStr) return '';
 
-        const date = new Date(dateStr);
+        // Parse DD-MM-YYYY format
+        const [day, month, year] = dateStr.split('-').map(Number);
+        if (!day || !month || !year) return dateStr; // fallback if format is wrong
+
         const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
             'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
 
-        const day = date.getDate();
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-
-        return `${day} ב${month} ${year}`;
+        const monthName = months[month - 1];
+        return `${day} ב${monthName} ${year}`;
     }
 
     // Display search results

@@ -176,7 +176,7 @@ function generatePostList(posts, limit = null) {
 ${postsToShow.map(post => `  <li>
     <a href="${post.url}">
       <span class="post-title">${post.title}</span>
-      <span class="post-date">${post.date}</span>
+      <span class="post-date">${formatDate(post.date)}</span>
     </a>
   </li>`).join('\n')}
 </ul>`;
