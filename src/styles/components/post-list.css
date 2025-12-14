@@ -1,0 +1,118 @@
+/* === Post List === */
+.post-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.post-list li {
+    background: var(--widget-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.post-list li:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.post-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    color: var(--text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.post-list a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: bottom;
+}
+
+.post-list a:hover::before {
+    transform: scaleY(1);
+    transform-origin: top;
+}
+
+.post-list a:hover {
+    text-decoration: none;
+}
+
+.post-list a:hover .post-title {
+    color: var(--accent);
+}
+
+.post-title {
+    transition: color 0.2s ease;
+}
+
+.post-date {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.2s ease;
+}
+
+.post-list a:hover .post-date {
+    color: var(--accent);
+    opacity: 0.7;
+}
+
+.see-all {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-md);
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--widget-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+}
+
+.see-all::after {
+    content: '←';
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.see-all:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateX(-4px);
+    text-decoration: none;
+}
+
+.see-all:hover::after {
+    transform: translateX(-4px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .post-list a {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}

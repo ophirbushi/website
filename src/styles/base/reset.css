@@ -1,0 +1,50 @@
+/* === Reset & Base === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scrollbar-gutter: stable;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    padding: var(--space-md) 1.5rem;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body[dir="rtl"],
+html[dir="rtl"] body {
+    direction: rtl;
+}
+
+body[dir="rtl"] pre,
+html[dir="rtl"] body pre {
+    direction: ltr;
+}
+
+img {
+    max-width: 100%;
+}

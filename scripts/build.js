@@ -328,24 +328,56 @@ ${indentedContent}
 
 // Copy static assets
 function copyAssets() {
-  const assetDirs = ['styles', 'js'];
+  // Copy JS files directly
+  const jsDir = path.join(SRC_DIR, 'js');
+  const publicJsDir = path.join(PUBLIC_DIR, 'js');
 
-  for (let dirName of assetDirs) {
-    const assetsDir = path.join(SRC_DIR, dirName);
-    const publicDir = path.join(PUBLIC_DIR, dirName);
+  ensureDir(publicJsDir);
 
-    ensureDir(publicDir);
+  if (fs.existsSync(jsDir)) {
+    const files = fs.readdirSync(jsDir);
+    files.forEach(file => {
+      fs.copyFileSync(
+        path.join(jsDir, file),
+        path.join(publicJsDir, file)
+      );
+    });
+  }
 
-    if (fs.existsSync(assetsDir)) {
-      const files = fs.readdirSync(assetsDir);
-      files.forEach(file => {
-        fs.copyFileSync(
-          path.join(assetsDir, file),
-          path.join(publicDir, file)
-        );
-      });
+  // Process CSS with @import resolution
+  const stylesDir = path.join(SRC_DIR, 'styles');
+  const publicStylesDir = path.join(PUBLIC_DIR, 'styles');
+  ensureDir(publicStylesDir);
+
+  if (fs.existsSync(stylesDir)) {
+    const mainCssPath = path.join(stylesDir, 'main.css');
+    if (fs.existsSync(mainCssPath)) {
+      const bundledCss = resolveCssImports(mainCssPath, stylesDir);
+      fs.writeFileSync(path.join(publicStylesDir, 'main.css'), bundledCss);
     }
   }
+}
+
+// Resolve CSS @import statements recursively
+function resolveCssImports(cssFilePath, baseDir) {
+  const content = readFile(cssFilePath);
+  const importRegex = /@import\s+['"](.+?)['"]\s*;/g;
+  
+  let resolved = content.replace(importRegex, (match, importPath) => {
+    // Resolve relative path
+    const resolvedPath = path.resolve(path.dirname(cssFilePath), importPath);
+    
+    if (fs.existsSync(resolvedPath)) {
+      // Recursively resolve imports in the imported file
+      const importedContent = resolveCssImports(resolvedPath, baseDir);
+      return `\n/* === Imported from ${importPath} === */\n${importedContent}\n`;
+    } else {
+      console.warn(`⚠️  CSS import not found: ${importPath}`);
+      return `/* Import not found: ${importPath} */`;
+    }
+  });
+  
+  return resolved;
 }
 
 // Generate posts JSON for client-side search

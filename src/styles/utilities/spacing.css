@@ -1,0 +1,35 @@
+/* === Spacing Utilities === */
+
+/* Margin Bottom */
+.mb-xs {
+    margin-bottom: var(--space-xs);
+}
+.mb-sm {
+    margin-bottom: var(--space-sm);
+}
+.mb-md {
+    margin-bottom: var(--space-md);
+}
+.mb-lg {
+    margin-bottom: var(--space-lg);
+}
+.mb-xl {
+    margin-bottom: var(--space-xl);
+}
+
+/* Padding Bottom */
+.pb-xs {
+    padding-bottom: var(--space-xs);
+}
+.pb-sm {
+    padding-bottom: var(--space-sm);
+}
+.pb-md {
+    padding-bottom: var(--space-md);
+}
+.pb-lg {
+    padding-bottom: var(--space-lg);
+}
+.pb-xl {
+    padding-bottom: var(--space-xl);
+}
