@@ -12,10 +12,7 @@ main {
 }
 
 /* Article and blog pages need container constraints */
-main > article,
-main > h1,
-main > p,
-main > ul.post-list {
+main > article {
     max-width: var(--max-width);
     margin-left: auto;
     margin-right: auto;
@@ -25,18 +22,20 @@ main > ul.post-list {
 
 /* Full-width sections */
 .hero,
-.recent-posts {
+.recent-posts,
+.blog-hero,
+.blog-posts {
     width: 100%;
 }
 
 .recent-posts {
-    padding: var(--space-xl) 0;
+    padding: var(--space-lg) 0;
     background: var(--bg);
 }
 
 .recent-posts h2 {
     text-align: center;
     font-size: 2rem;
-    margin-bottom: var(--space-sm);
+    margin-bottom: 0;
     color: var(--text);
 }

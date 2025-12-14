@@ -1,12 +1,19 @@
 <!-- title: הבלוג -->
-<!-- description: Get in touch with us -->
+<!-- description: כל הפוסטים והמחשבות על אמונה בישוע המשיח -->
 
-<h1>בלוג</h1>
-<p style="color: var(--text-muted); margin-bottom: var(--space-md); margin-top: var(--space-sm);">
-    כאן תמצאו פוסטים, מחשבות ותובנות אישיות על אמונה בישוע המשיח, מסע רוחני, לימוד מהכתובים, וכלים לצמיחה רוחנית.
-</p>
+<div class="blog-hero">
+    <div class="container">
+        <h1>כל הפוסטים</h1>
+        <p class="blog-description">
+            כאן תמצאו את כל הפוסטים, מחשבות ותובנות אישיות על אמונה בישוע המשיח, מסע רוחני, לימוד מהכתובים, וכלים לצמיחה רוחנית.
+        </p>
+    </div>
+</div>
 
-{{posts}}
-
-
-<div class="pb-xl">&nbsp;</div>
+<section class="blog-posts">
+    <div class="container">
+        <div class="post-grid">
+            {{posts}}
+        </div>
+    </div>
+</section>

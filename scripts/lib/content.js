@@ -257,8 +257,10 @@ function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = n
   const pageContent = readFile(pagePath);
   const isMarkdown = postData && postData.isMarkdown;
   
-  // Detect if this is the homepage (index.html)
+  // Detect if this is the homepage (index.html) or blog page
   const isHomepage = pagePath.endsWith('index.html') && !postData;
+  const isBlogPage = pagePath.endsWith('blog.html') && !postData;
+  const useGrid = isHomepage || isBlogPage;
   
   let processedContent;
   let metadata;
@@ -311,8 +313,8 @@ ${indentedContent}
     const layoutMatch = processedContent.match(/<!--\s*layout:\s*(.+?)\s*-->/);
     const useLayout = !layoutMatch || layoutMatch[1].trim().toLowerCase() !== 'none';
     
-    // Process post lists - use grid layout for homepage
-    processedContent = processPostLists(processedContent, posts, isHomepage);
+    // Process post lists - use grid layout for homepage and blog page
+    processedContent = processPostLists(processedContent, posts, useGrid);
 
     // If this is a post, inject post variables
     if (postData) {
