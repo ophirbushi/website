@@ -27,7 +27,33 @@ function extractMetadata(content, isMarkdown = false) {
   if (isMarkdown) {
     // Parse YAML frontmatter for Markdown files
     const { data } = matter(content);
-    return data;
+    
+    // Support both Hebrew and English field names
+    const normalizedData = {};
+    
+    // Title: support 'title' or 'כותרת'
+    normalizedData.title = data.title || data['כותרת'];
+    
+    // Date: support 'date' or 'תאריך'
+    normalizedData.date = data.date || data['תאריך'];
+    
+    // Excerpt: support 'excerpt' or 'תקציר'
+    normalizedData.excerpt = data.excerpt || data['תקציר'];
+    
+    // Description: support 'description' or 'תיאור'
+    normalizedData.description = data.description || data['תיאור'];
+    
+    // Tags: support 'tags' or 'תגיות'
+    normalizedData.tags = data.tags || data['תגיות'];
+    
+    // Copy any other fields as-is
+    Object.keys(data).forEach(key => {
+      if (!normalizedData[key] && !['כותרת', 'תאריך', 'תקציר', 'תיאור', 'תגיות'].includes(key)) {
+        normalizedData[key] = data[key];
+      }
+    });
+    
+    return normalizedData;
   }
 
   // Parse HTML comments for HTML files
