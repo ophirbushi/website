@@ -11,6 +11,7 @@
 
 /* Components */
 @import './components/navigation.css';
+@import './components/hero.css';
 @import './components/post-list.css';
 @import './components/article.css';
 @import './components/search.css';

@@ -1,16 +1,19 @@
 /* === Footer === */
 footer {
-    padding-top: var(--space-lg);
+    margin-top: var(--space-xl);
+    padding: var(--space-xl) var(--space-md);
     border-top: 1px solid var(--border);
+    background: var(--widget-bg);
     color: var(--text-muted);
     font-size: 0.85rem;
 }
 
 .footer-content {
+    max-width: var(--max-width);
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--space-lg);
-    margin-bottom: var(--space-md);
 }
 
 .footer-section h3 {

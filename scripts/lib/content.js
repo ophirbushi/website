@@ -153,7 +153,7 @@ function scanPosts(srcDir) {
   return posts;
 }
 
-// Generate HTML for post list
+var// Generate HTML for post list (simple list for blog page)
 function generatePostList(posts, limit = null) {
   const postsToShow = limit ? posts.slice(0, limit) : posts;
 
@@ -162,6 +162,30 @@ ${postsToShow.map(post => `  <li>
     <a href="${post.url}">
       <span class="post-title">${post.title}</span>
       <span class="post-date">${formatDate(post.date)}</span>
+    </a>
+  </li>`).join('\n')}
+</ul>`;
+}
+
+// Generate HTML for post grid (card layout for homepage)
+function generatePostGrid(posts, limit = null) {
+  const postsToShow = limit ? posts.slice(0, limit) : posts;
+
+  return `<ul class="post-grid">
+${postsToShow.map(post => `  <li>
+    <a href="${post.url}">
+      <div class="post-card-image">
+        ${post.image ? `<img src="${post.image}" alt="${post.title}">` : `<svg class="post-card-image-placeholder" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
+          <circle cx="9" cy="9" r="2"/>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+        </svg>`}
+      </div>
+      <div class="post-card-content">
+        <div class="post-card-title">${post.title}</div>
+        ${post.excerpt ? `<div class="post-card-excerpt">${post.excerpt}</div>` : ''}
+        <div class="post-card-date">${formatDate(post.date)}</div>
+      </div>
     </a>
   </li>`).join('\n')}
 </ul>`;
@@ -197,11 +221,12 @@ function processPartials(content, partialsDir) {
 }
 
 // Process post lists in content
-function processPostLists(content, posts) {
+function processPostLists(content, posts, useGrid = false) {
   // Match {{posts}} or {{posts:N}} patterns
   content = content.replace(/\{\{posts(?::(\d+))?\}\}/g, (match, limit) => {
     const maxPosts = limit ? parseInt(limit) : null;
-    return generatePostList(posts, maxPosts);
+    // Use grid layout if specified (for homepage), otherwise use list
+    return useGrid ? generatePostGrid(posts, maxPosts) : generatePostList(posts, maxPosts);
   });
 
   return content;
@@ -231,6 +256,9 @@ function renderTemplate(content, layout, partialsDir, data = {}) {
 function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = null) {
   const pageContent = readFile(pagePath);
   const isMarkdown = postData && postData.isMarkdown;
+  
+  // Detect if this is the homepage (index.html)
+  const isHomepage = pagePath.endsWith('index.html') && !postData;
   
   let processedContent;
   let metadata;
@@ -283,8 +311,8 @@ ${indentedContent}
     const layoutMatch = processedContent.match(/<!--\s*layout:\s*(.+?)\s*-->/);
     const useLayout = !layoutMatch || layoutMatch[1].trim().toLowerCase() !== 'none';
     
-    // Process post lists first
-    processedContent = processPostLists(processedContent, posts);
+    // Process post lists - use grid layout for homepage
+    processedContent = processPostLists(processedContent, posts, isHomepage);
 
     // If this is a post, inject post variables
     if (postData) {
@@ -357,6 +385,7 @@ module.exports = {
   findPostsRecursively,
   scanPosts,
   generatePostList,
+  generatePostGrid,
   loadPartial,
   processPartials,
   processPostLists,
