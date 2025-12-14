@@ -93,6 +93,19 @@
         }
     }
 
+    // Toggle search on mobile
+    function toggleSearch() {
+        const searchContainer = document.getElementById('search-container');
+        const isActive = searchContainer.classList.toggle('active');
+        
+        if (isActive) {
+            searchInput.focus();
+        } else {
+            searchInput.value = '';
+            searchResults.classList.add('hidden');
+        }
+    }
+
     // Initialize search
     async function init() {
         searchInput = document.getElementById('search-input');
@@ -107,6 +120,27 @@
         // Add event listeners
         searchInput.addEventListener('input', handleSearch);
         document.addEventListener('click', handleClickOutside);
+        
+        // Mobile search toggle
+        const searchToggle = document.getElementById('search-toggle');
+        if (searchToggle) {
+            searchToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleSearch();
+            });
+        }
+        
+        // Close mobile search on outside click
+        document.addEventListener('click', (e) => {
+            const searchContainer = document.getElementById('search-container');
+            if (searchContainer && searchContainer.classList.contains('active')) {
+                if (!searchContainer.contains(e.target) && !searchToggle?.contains(e.target)) {
+                    searchContainer.classList.remove('active');
+                    searchInput.value = '';
+                    searchResults.classList.add('hidden');
+                }
+            }
+        });
 
         // Focus search on '/' key
         document.addEventListener('keydown', (e) => {
