@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const { marked } = require('marked');
+const matter = require('gray-matter');
 
 const SRC_DIR = path.join(__dirname, '../src');
 const PUBLIC_DIR = path.join(__dirname, '../public');
@@ -20,8 +22,15 @@ function ensureDir(dir) {
   }
 }
 
-// Extract metadata from HTML comments
-function extractMetadata(content) {
+// Extract metadata from HTML comments or YAML frontmatter
+function extractMetadata(content, isMarkdown = false) {
+  if (isMarkdown) {
+    // Parse YAML frontmatter for Markdown files
+    const { data } = matter(content);
+    return data;
+  }
+
+  // Parse HTML comments for HTML files
   const metadata = {};
 
   const titleMatch = content.match(/<!--\s*title:\s*(.+?)\s*-->/);
@@ -63,17 +72,25 @@ function scanPosts() {
   }
 
   const posts = fs.readdirSync(postsDir)
-    .filter(f => f.endsWith('.html'))
+    .filter(f => f.endsWith('.html') || f.endsWith('.md'))
     .map(filename => {
       const filePath = path.join(postsDir, filename);
       const content = readFile(filePath);
-      const metadata = extractMetadata(content);
+      const isMarkdown = filename.endsWith('.md');
+      const metadata = extractMetadata(content, isMarkdown);
+      
+      // Generate output filename (always .html)
+      const outputFilename = isMarkdown 
+        ? filename.replace('.md', '.html')
+        : filename;
 
       return {
         filename,
-        slug: filename.replace('.html', ''),
-        url: `/posts/${filename}`,
-        title: metadata.title || filename.replace('.html', ''),
+        outputFilename,
+        isMarkdown,
+        slug: filename.replace(/\.(html|md)$/, ''),
+        url: `/posts/${outputFilename}`,
+        title: metadata.title || filename.replace(/\.(html|md)$/, ''),
         date: metadata.date || '',
         excerpt: metadata.excerpt || '',
         ...metadata
@@ -165,31 +182,77 @@ function renderTemplate(content, layout, data = {}) {
 // Process a single page
 function processPage(pagePath, layoutPath, posts = [], postData = null) {
   const pageContent = readFile(pagePath);
+  const isMarkdown = postData && postData.isMarkdown;
+  
+  let processedContent;
+  let metadata;
 
-  // Check if page specifies no layout (<!-- layout: none -->)
-  const layoutMatch = pageContent.match(/<!--\s*layout:\s*(.+?)\s*-->/);
-  const useLayout = !layoutMatch || layoutMatch[1].trim().toLowerCase() !== 'none';
+  if (isMarkdown) {
+    // Parse Markdown with frontmatter
+    const { data, content } = matter(pageContent);
+    metadata = data;
+    
+    // Convert Markdown to HTML
+    let htmlContent = marked(content);
+    
+    // Extract leading image if present (for better formatting like HTML posts)
+    let leadingImage = '';
+    const imgMatch = htmlContent.match(/^<p>(<img[^>]+>)<\/p>\s*/);
+    if (imgMatch) {
+      leadingImage = '    ' + imgMatch[1] + '\n\n';
+      htmlContent = htmlContent.replace(imgMatch[0], '');
+    }
+    
+    // Add proper indentation to HTML content for better readability
+    const indentedContent = htmlContent
+      .split('\n')
+      .map(line => line.trim() ? '        ' + line : '')
+      .join('\n');
+    
+    // Wrap in article structure if it's a post
+    if (postData) {
+      processedContent = `<article>
+    <header>
+        <h1>${postData.title}</h1>
+        <p class="meta">${formatDate(postData.date)}</p>
+    </header>
 
-  // Process post lists first
-  let processedContent = processPostLists(pageContent, posts);
+${leadingImage}    <div class="prose">
+${indentedContent}
+    </div>
 
-  // If this is a post, inject post variables
-  if (postData) {
-    processedContent = processedContent.replace(/\{\{post\.title\}\}/g, postData.title);
-    processedContent = processedContent.replace(/\{\{post\.date\}\}/g, formatDate(postData.date));
-    processedContent = processedContent.replace(/\{\{post\.excerpt\}\}/g, postData.excerpt || '');
-  }
+    {{partial:back-to-blog}}
+</article>`;
+    } else {
+      processedContent = htmlContent;
+    }
+  } else {
+    // HTML file processing
+    processedContent = pageContent;
+    metadata = extractMetadata(processedContent, false);
+    
+    // Check if page specifies no layout (<!-- layout: none -->)
+    const layoutMatch = processedContent.match(/<!--\s*layout:\s*(.+?)\s*-->/);
+    const useLayout = !layoutMatch || layoutMatch[1].trim().toLowerCase() !== 'none';
+    
+    // Process post lists first
+    processedContent = processPostLists(processedContent, posts);
 
-  // If no layout, still process partials
-  if (!useLayout) {
-    return processPartials(processedContent);
+    // If this is a post, inject post variables
+    if (postData) {
+      processedContent = processedContent.replace(/\{\{post\.title\}\}/g, postData.title);
+      processedContent = processedContent.replace(/\{\{post\.date\}\}/g, formatDate(postData.date));
+      processedContent = processedContent.replace(/\{\{post\.excerpt\}\}/g, postData.excerpt || '');
+    }
+
+    // If no layout, still process partials
+    if (!useLayout) {
+      return processPartials(processedContent);
+    }
   }
 
   const layout = readFile(layoutPath);
-
-  // Extract metadata
-  const metadata = extractMetadata(processedContent);
-  const title = [metadata.title, 'ישוע בלוג'].filter(seg => seg).join(' | ');
+  const title = [metadata.title || (postData && postData.title), 'ישוע בלוג'].filter(seg => seg).join(' | ');
   const description = metadata.description || '';
 
   // Render the page
@@ -228,14 +291,21 @@ function generatePostsJson(posts) {
     // Read the post content to include in search
     const postPath = path.join(SRC_DIR, 'posts', post.filename);
     const content = readFile(postPath);
-
-    // Strip HTML tags for plain text search
-    const plainText = content
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
+    
+    let plainText;
+    if (post.isMarkdown) {
+      // For Markdown, extract content without frontmatter
+      const { content: mdContent } = matter(content);
+      plainText = mdContent.replace(/[#*_`\[\]()]/g, ' ').replace(/\s+/g, ' ').trim();
+    } else {
+      // Strip HTML tags for plain text search
+      plainText = content
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
 
     return {
       title: post.title,
@@ -300,19 +370,14 @@ function build() {
     const publicPostsDir = path.join(PUBLIC_DIR, 'posts');
     ensureDir(publicPostsDir);
 
-    const postFiles = fs.readdirSync(postsDir).filter(f => f.endsWith('.html'));
-
-    postFiles.forEach(post => {
-      const postPath = path.join(postsDir, post);
-      const outputPath = path.join(publicPostsDir, post);
-
-      // Find the post metadata
-      const postData = posts.find(p => p.filename === post);
+    posts.forEach(postData => {
+      const postPath = path.join(postsDir, postData.filename);
+      const outputPath = path.join(publicPostsDir, postData.outputFilename);
 
       const rendered = processPage(postPath, layoutPath, posts, postData);
       fs.writeFileSync(outputPath, rendered);
 
-      console.log(`✅ Built post: ${post}`);
+      console.log(`✅ Built post: ${postData.filename} → ${postData.outputFilename}`);
     });
   }
 

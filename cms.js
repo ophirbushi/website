@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
 const Anthropic = require('@anthropic-ai/sdk');
+const matter = require('gray-matter');
 
 const app = express();
 const PORT = 3001;
@@ -15,8 +16,22 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Parse metadata from HTML comments
-function parseMetadata(content) {
+// Parse metadata from HTML comments or YAML frontmatter
+function parseMetadata(content, filename) {
+  const isMarkdown = filename.endsWith('.md');
+  
+  if (isMarkdown) {
+    // Parse YAML frontmatter for Markdown files
+    const { data } = matter(content);
+    return {
+      title: data.title || '',
+      date: data.date || '',
+      excerpt: data.excerpt || '',
+      tags: data.tags || ''
+    };
+  }
+  
+  // Parse HTML comments for HTML files
   const metadata = {
     title: '',
     date: '',
@@ -59,9 +74,17 @@ function formatDateForStorage(dateStr) {
   return dateStr;
 }
 
-// Extract main content (everything after metadata comments)
-function extractContent(content) {
-  // Remove metadata comments and get the rest
+// Extract main content (everything after metadata comments or frontmatter)
+function extractContent(content, filename) {
+  const isMarkdown = filename.endsWith('.md');
+  
+  if (isMarkdown) {
+    // For Markdown, extract content without frontmatter
+    const { content: mdContent } = matter(content);
+    return mdContent;
+  }
+  
+  // Remove metadata comments and get the rest for HTML
   let cleaned = content.replace(/<!--\s*title:\s*.+?\s*-->\s*/g, '');
   cleaned = cleaned.replace(/<!--\s*date:\s*.+?\s*-->\s*/g, '');
   cleaned = cleaned.replace(/<!--\s*excerpt:\s*.+?\s*-->\s*/g, '');
@@ -70,7 +93,25 @@ function extractContent(content) {
 }
 
 // Reconstruct file with metadata and content
-function reconstructFile(metadata, content) {
+function reconstructFile(metadata, content, filename) {
+  const isMarkdown = filename.endsWith('.md');
+  
+  if (isMarkdown) {
+    // Use YAML frontmatter for Markdown files
+    const frontmatter = {
+      title: metadata.title,
+      date: metadata.date,
+      excerpt: metadata.excerpt
+    };
+    
+    if (metadata.tags) {
+      frontmatter.tags = metadata.tags;
+    }
+    
+    return matter.stringify(content, frontmatter);
+  }
+  
+  // Use HTML comments for HTML files
   let result = `<!-- title: ${metadata.title} -->
 <!-- date: ${metadata.date} -->
 <!-- excerpt: ${metadata.excerpt} -->`;
@@ -87,14 +128,15 @@ function reconstructFile(metadata, content) {
 app.get('/', async (req, res) => {
   try {
     const files = await fs.readdir(POSTS_DIR);
-    const htmlFiles = files.filter(f => f.endsWith('.html'));
+    const postFiles = files.filter(f => f.endsWith('.html') || f.endsWith('.md'));
     
     const posts = await Promise.all(
-      htmlFiles.map(async (file) => {
+      postFiles.map(async (file) => {
         const content = await fs.readFile(path.join(POSTS_DIR, file), 'utf-8');
-        const metadata = parseMetadata(content);
+        const metadata = parseMetadata(content, file);
         return {
           filename: file,
+          isMarkdown: file.endsWith('.md'),
           ...metadata
         };
       })
@@ -216,7 +258,10 @@ app.get('/', async (req, res) => {
 // New article page
 app.get('/new', async (req, res) => {
   const timestamp = Date.now();
-  const filename = `new-article-${timestamp}.html`;
+  const format = req.query.format || 'html'; // Default to HTML
+  const filename = format === 'md' 
+    ? `new-article-${timestamp}.md`
+    : `new-article-${timestamp}.html`;
   const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   
   const metadata = {
@@ -226,7 +271,9 @@ app.get('/new', async (req, res) => {
     tags: ''
   };
   
-  const mainContent = `<article>
+  const mainContent = format === 'md'
+    ? '## התחל לכתוב כאן...\n\nזהו מאמר חדש.'
+    : `<article>
     <header>
         <h1>{{post.title}}</h1>
         <p class="meta">{{post.date}}</p>
@@ -246,6 +293,7 @@ app.get('/edit/:filename', async (req, res) => {
   try {
     const filename = req.params.filename;
     const filePath = path.join(POSTS_DIR, filename);
+    const isMarkdown = filename.endsWith('.md');
     
     let metadata, mainContent;
     
@@ -260,8 +308,8 @@ app.get('/edit/:filename', async (req, res) => {
       mainContent = decodeURIComponent(req.query.content || '');
     } else {
       const content = await fs.readFile(filePath, 'utf-8');
-      metadata = parseMetadata(content);
-      mainContent = extractContent(content);
+      metadata = parseMetadata(content, filename);
+      mainContent = extractContent(content, filename);
     }
 
     res.send(`
@@ -684,7 +732,7 @@ app.post('/api/save', async (req, res) => {
     
     const filePath = path.join(POSTS_DIR, filename);
     const formattedDate = formatDateForStorage(date);
-    const fileContent = reconstructFile({ title, date: formattedDate, excerpt, tags }, content);
+    const fileContent = reconstructFile({ title, date: formattedDate, excerpt, tags }, content, filename);
     
     await fs.writeFile(filePath, fileContent, 'utf-8');
     
