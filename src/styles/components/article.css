@@ -146,26 +146,29 @@ body[dir="rtl"] .prose blockquote {
     gap: var(--space-xs);
     margin-top: var(--space-lg);
     margin-bottom: var(--space-md);
-    padding: var(--space-xs) var(--space-sm);
-    color: var(--text-muted);
-    background: var(--widget-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    color: var(--text);
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
     box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
 }
 
 .back-link::before {
     content: '→';
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.1rem;
 }
 
 .back-link:hover {
     color: var(--accent);
     border-color: var(--accent);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
     transform: translateX(4px);
     text-decoration: none;
+    background: color-mix(in srgb, var(--accent) 5%, white 95%);
 }
 
 .back-link:hover::before {
