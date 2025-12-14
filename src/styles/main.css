@@ -10,7 +10,8 @@
 :root {
     --text: #1a1a1a;
     --text-muted: #666;
-    --bg: #fafafa;
+    --bg: #ffffff;
+    --widget-bg: #fdfdfd;
     --accent: #0066cc;
     --accent-light: #e6f2ff;
     --border: #e0e0e0;
@@ -76,13 +77,12 @@ h1 {
     font-size: 1.75rem;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: var(--space-md);
 }
 
 h2 {
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-sm);
     color: var(--text-muted);
     position: relative;
     padding-left: 0.75rem;
@@ -185,9 +185,10 @@ main {
 .intro {
     margin-bottom: var(--space-xl);
     padding: var(--space-md);
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.03) 0%, rgba(0, 102, 204, 0.01) 100%);
+    background: var(--widget-bg);
     border-radius: 16px;
-    border: 1px solid rgba(0, 102, 204, 0.1);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 .intro h1 {
@@ -246,7 +247,8 @@ main {
     padding: 0.5rem 1rem;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: white;
+    background: var(--widget-bg);
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -285,9 +287,10 @@ main {
 }
 
 .post-list li {
-    background: white;
+    background: var(--widget-bg);
     border-radius: 12px;
     border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
 }
@@ -359,9 +362,10 @@ main {
     margin-bottom: var(--space-md);
     font-size: 0.9rem;
     padding: 0.6rem 1.2rem;
-    background: white;
+    background: var(--widget-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
 }
@@ -516,9 +520,10 @@ body[dir="rtl"] .prose blockquote {
     margin-bottom: var(--space-md);
     padding: var(--space-xs) var(--space-sm);
     color: var(--text-muted);
-    background: white;
+    background: var(--widget-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -654,11 +659,38 @@ article img {
 }
 
 
+.mb-xs {
+    margin-bottom: var(--space-xs);
+}
+.mb-sm {
+    margin-bottom: var(--space-sm);
+}
 .mb-md {
     margin-bottom: var(--space-md);
 }
+.mb-lg {
+    margin-bottom: var(--space-lg);
+}
+.mb-xl {
+    margin-bottom: var(--space-xl);
+}
 
 
+.pb-xs {
+    padding-bottom: var(--space-xs);
+}
+.pb-sm {
+    padding-bottom: var(--space-sm);
+}
+.pb-md {
+    padding-bottom: var(--space-md);
+}
+.pb-lg {
+    padding-bottom: var(--space-lg);
+}
+.pb-xl {
+    padding-bottom: var(--space-xl);
+}
 
 /* === Footer === */
 footer {
@@ -718,7 +750,7 @@ footer {
 }
 
 .footer-bottom {
-    padding-top: 2rem;
+    padding-top: var(--space-md);
     border-top: 1px solid var(--border);
     text-align: center;
 }
@@ -732,74 +764,6 @@ footer {
 @media (max-width: 600px) {
     .footer-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 3rem;
-    margin-bottom: 2rem;
-}
-
-.footer-section h3 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.footer-about p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-
-.footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.footer-links a,
-.footer-social a {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    display: inline-block;
-}
-
-.footer-links a:hover,
-.footer-social a:hover {
-    color: var(--accent);
-    text-decoration: none;
-    /* transform: translateX(-3px); */
-}
-
-.footer-social {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.footer-bottom {
-    padding-top: 2rem;
-    border-top: 1px solid var(--border);
-    text-align: center;
-}
-
-.footer-bottom p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-/* Responsive footer */
-@media (max-width: 600px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: var(--space-md);
     }
 }
