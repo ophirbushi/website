@@ -29,13 +29,13 @@ main>article {
 }
 
 .recent-posts {
-    padding: var(--space-lg) 0;
+    padding-top: var(--space-lg);
     background: var(--bg);
 }
 
 @media (max-width: 768px) {
     .recent-posts {
-        padding: var(--space-md) 0;
+        padding-top: var(--space-md);
     }
 }
 
