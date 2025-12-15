@@ -20,7 +20,7 @@ h2 {
     padding-left: 0.75rem;
 }
 
-h2::before {
+/* h2::before {
     content: '';
     position: absolute;
     left: 0;
@@ -30,7 +30,7 @@ h2::before {
     height: 60%;
     background: var(--accent);
     border-radius: 2px;
-}
+} */
 
 a {
     color: var(--accent);
