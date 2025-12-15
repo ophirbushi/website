@@ -43,6 +43,12 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .blog-hero {
+        margin-top: 0;
+        margin-bottom: var(--space-md);
+        border-radius: 0 0 16px 16px;
+    }
+    
     .blog-hero h1 {
         font-size: 2rem;
     }

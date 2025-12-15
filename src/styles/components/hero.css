@@ -135,6 +135,9 @@
 @media (max-width: 768px) {
     .hero {
         padding: var(--space-lg) var(--space-md);
+        margin-top: 0;
+        margin-bottom: var(--space-md);
+        border-radius: 0 0 16px 16px;
     }
 
     .hero h1 {
