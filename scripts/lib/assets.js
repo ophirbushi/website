@@ -17,11 +17,11 @@ function ensureDir(dir) {
 function resolveCssImports(cssFilePath, baseDir) {
   const content = readFile(cssFilePath);
   const importRegex = /@import\s+['"](.+?)['"]\s*;/g;
-  
+
   let resolved = content.replace(importRegex, (match, importPath) => {
     // Resolve relative path
     const resolvedPath = path.resolve(path.dirname(cssFilePath), importPath);
-    
+
     if (fs.existsSync(resolvedPath)) {
       // Recursively resolve imports in the imported file
       const importedContent = resolveCssImports(resolvedPath, baseDir);
@@ -31,7 +31,7 @@ function resolveCssImports(cssFilePath, baseDir) {
       return `/* Import not found: ${importPath} */`;
     }
   });
-  
+
   return resolved;
 }
 
@@ -68,8 +68,26 @@ function copyJs(srcDir, publicDir) {
   }
 }
 
+function copyStaticAssetsDir(srcDir, publicDir) {
+  const assetsDir = path.join(srcDir, 'assets');
+  const publicAssetsDir = path.join(publicDir, 'assets');
+
+  ensureDir(publicAssetsDir);
+
+  if (fs.existsSync(assetsDir)) {
+    const files = fs.readdirSync(assetsDir);
+    files.forEach(file => {
+      fs.copyFileSync(
+        path.join(assetsDir, file),
+        path.join(publicAssetsDir, file)
+      );
+    });
+  }
+}
+
 // Copy all static assets
 function copyAssets(srcDir, publicDir) {
+  copyStaticAssetsDir(srcDir, publicDir);
   copyJs(srcDir, publicDir);
   processCss(srcDir, publicDir);
 }
@@ -78,6 +96,7 @@ module.exports = {
   readFile,
   ensureDir,
   resolveCssImports,
+  copyStaticAssetsDir,
   processCss,
   copyJs,
   copyAssets
