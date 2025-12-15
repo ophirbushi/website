@@ -1,0 +1,46 @@
+/* === Related Posts Section === */
+.related-posts {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 2px solid var(--border);
+}
+
+.related-posts-header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.related-posts-header h2 {
+    font-size: 1.75rem;
+    margin-bottom: var(--space-xs);
+    color: var(--text);
+}
+
+.related-posts-header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.related-posts-grid {
+    margin-bottom: var(--space-lg);
+}
+
+/* Related posts in article context - smaller cards */
+.related-posts .post-card-image {
+    height: 160px;
+}
+
+.related-posts .post-card-title {
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .related-posts-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .related-posts .post-card-image {
+        height: 140px;
+    }
+}

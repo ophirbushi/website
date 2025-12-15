@@ -224,7 +224,7 @@ function processPartials(content, partialsDir) {
 }
 
 // Process post lists in content
-function processPostLists(content, posts, useGrid = false) {
+function processPostLists(content, posts, useGrid = false, currentPostUrl = null) {
   // Match {{posts}} or {{posts:N}} patterns
   content = content.replace(/\{\{posts(?::(\d+))?\}\}/g, (match, limit) => {
     const maxPosts = limit ? parseInt(limit) : null;
@@ -232,19 +232,42 @@ function processPostLists(content, posts, useGrid = false) {
     return useGrid ? generatePostGrid(posts, maxPosts) : generatePostList(posts, maxPosts);
   });
 
+  // Match {{related-posts:N}} pattern for related posts on article pages
+  content = content.replace(/\{\{related-posts(?::(\d+))?\}\}/g, (match, limit) => {
+    const maxPosts = limit ? parseInt(limit) : 3;
+    // Filter out current post and get random related posts
+    const otherPosts = currentPostUrl 
+      ? posts.filter(p => p.url !== currentPostUrl)
+      : posts;
+    
+    // Get random posts
+    const shuffled = [...otherPosts].sort(() => 0.5 - Math.random());
+    const relatedPosts = shuffled.slice(0, maxPosts);
+    
+    return generatePostGrid(relatedPosts, null);
+  });
+
   return content;
 }
 
 // Simple template engine
-function renderTemplate(content, layout, partialsDir, data = {}) {
+function renderTemplate(content, layout, partialsDir, posts = [], data = {}) {
   // First, process partials in the content
   content = processPartials(content, partialsDir);
+  
+  // Process post lists and related posts in partials
+  const currentPostUrl = data.currentPostUrl || null;
+  const useGrid = data.useGrid || false;
+  content = processPostLists(content, posts, useGrid, currentPostUrl);
 
   // Replace {{content}} in layout with page content
   let output = layout.replace('{{content}}', content);
 
   // Process partials in the layout too
   output = processPartials(output, partialsDir);
+  
+  // Process post lists in layout partials too
+  output = processPostLists(output, posts, useGrid, currentPostUrl);
 
   // Replace all {{key}} with data values
   Object.keys(data).forEach(key => {
@@ -317,7 +340,9 @@ ${indentedContent}
     const useLayout = !layoutMatch || layoutMatch[1].trim().toLowerCase() !== 'none';
     
     // Process post lists - use grid layout for homepage and blog page
-    processedContent = processPostLists(processedContent, posts, useGrid);
+    // Pass current post URL for related posts filtering
+    const currentPostUrl = postData ? postData.url : null;
+    processedContent = processPostLists(processedContent, posts, useGrid, currentPostUrl);
 
     // If this is a post, inject post variables
     if (postData) {
@@ -337,10 +362,12 @@ ${indentedContent}
   const description = metadata.description || '';
 
   // Render the page
-  return renderTemplate(processedContent, layout, partialsDir, {
+  return renderTemplate(processedContent, layout, partialsDir, posts, {
     title,
     description,
-    year: new Date().getFullYear()
+    year: new Date().getFullYear(),
+    currentPostUrl: postData ? postData.url : null,
+    useGrid
   });
 }
 
