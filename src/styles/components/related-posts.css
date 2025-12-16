@@ -7,7 +7,7 @@
 
 .related-posts-header {
     text-align: center;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
 .related-posts-header h2 {
@@ -22,7 +22,7 @@
 }
 
 .related-posts-grid {
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
 /* Related posts in article context - smaller cards */
