@@ -61,12 +61,19 @@ nav.hiding {
 }
 
 .logo {
-    font-weight: 600;
-    color: var(--text);
+    color: var(--accent);
+    font-size: 1rem;
+    font-weight: bold;
     position: relative;
+    transition: .2s color ease-out;
 }
 
-.logo::after {
+/* .logo:hover {
+    color: var(--gold-3);
+    text-decoration: none;
+} */
+
+/* .logo::after {
     content: '';
     position: absolute;
     bottom: -2px;
@@ -77,14 +84,11 @@ nav.hiding {
     transition: width 0.3s ease;
 }
 
-.logo:hover {
-    color: var(--text);
-    text-decoration: none;
-}
+
 
 .logo:hover::after {
     width: 100%;
-}
+} */
 
 .nav-links {
     display: flex;
