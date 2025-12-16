@@ -1,7 +1,7 @@
 /* === Related Posts Section === */
 .related-posts {
     margin-top: var(--space-xl);
-    padding-top: var(--space-xl);
+    padding-top: var(--space-lg);
     border-top: 2px solid var(--border);
 }
 

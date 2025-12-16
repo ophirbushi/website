@@ -89,7 +89,7 @@ nav.hiding {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .nav-links>a {
@@ -117,17 +117,22 @@ nav.hiding {
     width: 100%;
 }
 
+.nav-links>*:not(.nav-bible-link) {
+    margin: 0 0.8rem;
+}
+
 .nav-bible-link {
-    background: var(--accent-light);
+    background: transparent;
     padding: 0.4rem 0.8rem;
     border-radius: 6px;
-    color: var(--accent) !important;
+    color: var(--text-muted);
     font-weight: 500;
 }
 
 .nav-bible-link:hover {
-    background: var(--accent);
-    color: white !important;
+    background: var(--gold-1);
+    color: var(--text);
+    /* color: white !important; */
 }
 
 .nav-bible-link::after {
