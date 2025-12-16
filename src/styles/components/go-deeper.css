@@ -1,0 +1,77 @@
+/* === Go Deeper CTA Section === */
+.go-deeper-cta {
+    background: var(--accent-light);
+    padding: var(--space-lg);
+    margin: var(--space-xl) 0;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent 80%);
+}
+
+.go-deeper-cta h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-md);
+    color: var(--text);
+}
+
+.go-deeper-cta .cta-grid {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.go-deeper-cta .cta-item {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.go-deeper-cta .cta-item p {
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.go-deeper-cta .cta-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.go-deeper-cta .cta-btn.primary {
+    background: var(--accent);
+    color: white;
+    border: 2px solid var(--accent);
+}
+
+.go-deeper-cta .cta-btn.primary:hover {
+    background: color-mix(in srgb, var(--accent) 85%, black 15%);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.go-deeper-cta .partner-links {
+    display: flex;
+    gap: var(--space-xs);
+    justify-content: center;
+    align-items: center;
+}
+
+.go-deeper-cta .partner-links a {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.go-deeper-cta .partner-links span {
+    color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+    .go-deeper-cta .cta-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+}

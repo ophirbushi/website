@@ -68,6 +68,23 @@ nav {
     width: 100%;
 }
 
+.nav-bible-link {
+    background: var(--accent-light);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    color: var(--accent) !important;
+    font-weight: 500;
+}
+
+.nav-bible-link:hover {
+    background: var(--accent);
+    color: white !important;
+}
+
+.nav-bible-link::after {
+    display: none !important;
+}
+
 /* Mobile sticky header */
 @media (max-width: 768px) {
     nav {
