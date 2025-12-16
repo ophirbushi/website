@@ -205,8 +205,8 @@
 }
 
 .see-all:hover {
-    background: color-mix(in srgb, var(--accent) 90%, black 10%);
-    border-color: color-mix(in srgb, var(--accent) 90%, black 10%);
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
     box-shadow: var(--shadow-lg);
     transform: translateY(-2px);
     text-decoration: none;

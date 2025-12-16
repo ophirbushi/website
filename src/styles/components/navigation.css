@@ -65,13 +65,22 @@ nav.hiding {
     font-size: 1rem;
     font-weight: bold;
     position: relative;
-    transition: .2s color ease-out;
+    transition: .3s color ease-out;
 }
 
-/* .logo:hover {
-    color: var(--gold-3);
+.logo-svg circle {
+    fill: var(--accent);
+    transition: .3s fill ease-out;
+}
+
+.logo:hover {
+    color: var(--accent-hover);
     text-decoration: none;
-} */
+}
+
+.logo:hover .logo-svg circle {
+    fill: var(--accent-hover)
+}
 
 /* .logo::after {
     content: '';
