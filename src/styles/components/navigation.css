@@ -1,14 +1,63 @@
 /* === Navigation === */
 nav {
+    margin: 0 auto var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-inner {
+    padding: var(--space-sm) var(--space-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-md) var(--space-md) var(--space-sm);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    gap: 1.5rem;
+    width: 100%;
     max-width: var(--max-width);
-    margin: 0 auto var(--space-lg);
+    gap: 1.5rem;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.2s ease;
+}
+
+/* Sticky nav when scrolling */
+nav.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--bg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+nav.hiding {
+    animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translate3d(0, -100%, 0);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate3d(0, -100%, 0);
+        opacity: 0;
+    }
 }
 
 .logo {
@@ -83,21 +132,4 @@ nav {
 
 .nav-bible-link::after {
     display: none !important;
-}
-
-/* Mobile sticky header */
-@media (max-width: 768px) {
-    nav {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: var(--bg);
-        margin-bottom: 0;
-        padding: var(--space-sm) var(--space-md);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    main {
-        padding-top: var(--space-md);
-    }
 }

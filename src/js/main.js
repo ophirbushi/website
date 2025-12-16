@@ -151,10 +151,75 @@
         });
     }
 
+    // Sticky navigation on scroll
+    function handleStickyNav() {
+        const nav = document.querySelector('nav');
+        if (!nav) return;
+
+        // Create placeholder to prevent layout shift
+        const placeholder = document.createElement('div');
+        placeholder.style.display = 'none';
+        nav.parentNode.insertBefore(placeholder, nav);
+
+        // Measure nav total height including margins when it's in normal position
+        const navStyles = window.getComputedStyle(nav);
+        const originalNavHeight = nav.offsetHeight;
+        const marginBottom = parseFloat(navStyles.marginBottom);
+        const totalHeight = originalNavHeight + marginBottom;
+
+        let isSticky = false;
+        let ticking = false;
+        const showThreshold = 120;
+        const hideThreshold = 80;
+
+        function updateNav() {
+            const currentScrollY = window.scrollY;
+            
+            // Use different thresholds for showing vs hiding to prevent flickering
+            if (!isSticky && currentScrollY > showThreshold) {
+                isSticky = true;
+                
+                // Set placeholder to exact total height including margin
+                placeholder.style.height = totalHeight + 'px';
+                placeholder.style.display = 'block';
+                
+                nav.classList.add('sticky');
+            } else if (isSticky && currentScrollY < hideThreshold) {
+                isSticky = false;
+                
+                nav.classList.add('hiding');
+                nav.classList.remove('sticky');
+                
+                // Hide placeholder
+                placeholder.style.display = 'none';
+                
+                // Remove hiding class after animation completes
+                setTimeout(() => {
+                    nav.classList.remove('hiding');
+                }, 250);
+            }
+
+            ticking = false;
+        }
+
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateNav);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestTick, { passive: true });
+    }
+
     // Run when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            handleStickyNav();
+        });
     } else {
         init();
+        handleStickyNav();
     }
 })();
