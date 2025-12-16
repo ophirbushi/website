@@ -130,7 +130,7 @@ nav.hiding {
 }
 
 /* Responsive */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
     .nav-links>*:not(.nav-bible-link) {
         margin: 0;
     }
@@ -138,7 +138,7 @@ nav.hiding {
     .nav-bible-link {
         padding: 0.4rem;
     }
-} */
+}
 
 .nav-bible-link:hover {
     background: var(--gold-1);
