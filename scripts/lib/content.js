@@ -150,7 +150,14 @@ function scanPosts(srcDir) {
   .sort((a, b) => {
     // Sort by date descending (newest first)
     if (!a.date || !b.date) return 0;
-    return new Date(b.date) - new Date(a.date);
+    
+    // Parse dd-mm-yyyy format
+    const parseDate = (dateStr) => {
+      const [day, month, year] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    };
+    
+    return parseDate(b.date) - parseDate(a.date);
   });
 
   return posts;
