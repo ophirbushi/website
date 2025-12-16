@@ -42,8 +42,13 @@ article .meta {
     font-size: 0.9rem;
 }
 
-article img {
+article>img {
     margin-bottom: var(--space-md);
+}
+
+article p>img {
+    margin-top: var(--space-sm);
+    margin-bottom: calc(0 - var(--space-sm));
 }
 
 /* Prose styling */
