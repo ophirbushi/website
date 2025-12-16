@@ -1,0 +1,6 @@
+/* Responsive */
+@media (max-width: 768px) {
+    .hidden-sm {
+        display: none !important;
+    }
+}
