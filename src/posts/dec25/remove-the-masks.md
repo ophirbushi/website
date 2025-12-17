@@ -3,7 +3,7 @@
 תאריך: 14-12-2025
 תקציר: בעולם של פילטרים ולייקים, האתגר הגדול ביותר הוא להיות מי שאנחנו באמת. אלוהים מחפש את הלב, לא את ההצגה.
 תגיות: אמת, זהות, כנות
-מזעורית: https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=940&h=200&fit=crop
+מזעורית: https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=940&fit=crop
 ---
 
 ![השתקפות במראה](https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=940&fit=crop)
