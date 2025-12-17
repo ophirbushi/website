@@ -146,6 +146,39 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, #2262dd 20%, transparent 80%);
 }
 
+/* Reset button styling */
+#a11y-panel button.reset-btn {
+  margin-top: 4px;
+  background: var(--surface);
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+#a11y-panel button.reset-btn::before {
+  background: color-mix(in srgb, #dc2626 10%, transparent 90%);
+}
+
+#a11y-panel button.reset-btn:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
+#a11y-panel button.reset-btn:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #dc2626 20%, transparent 80%);
+}
+
+/* Scroll-based transparency (all screen sizes) */
+#a11y-toggle.scrolling-down {
+  opacity: 0.3;
+}
+
+#a11y-toggle.scrolling-up,
+#a11y-toggle.menu-open {
+  opacity: 1 !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .a11y-menu {
@@ -157,18 +190,6 @@
     width: 48px;
     height: 48px;
     font-size: 1.3rem;
-    opacity: 1;
-  }
-
-  /* Transparent when scrolling down */
-  #a11y-toggle.scrolling-down {
-    opacity: 0.3;
-  }
-
-  /* Opaque when scrolling up or menu is open */
-  #a11y-toggle.scrolling-up,
-  #a11y-toggle.menu-open {
-    opacity: 1 !important;
   }
 
   #a11y-toggle>img {
@@ -185,11 +206,6 @@
     padding: 10px 14px;
     font-size: var(--font-md);
   }
-}
-
-/* High contrast adjustments */
-body.high-contrast #a11y-toggle {
-  border: 3px solid var(--text);
 }
 
 body.high-contrast #a11y-panel button {
