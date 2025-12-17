@@ -56,13 +56,14 @@
     // Display search results
     function displayResults(results, query) {
         if (results.length === 0) {
-            searchResults.innerHTML = '<div class="no-results">לא נמצאו תוצאות</div>';
+            searchResults.innerHTML = '<div class="no-results" role="status">לא נמצאו תוצאות</div>';
             searchResults.classList.remove('hidden');
+            announceToScreenReader('לא נמצאו תוצאות עבור החיפוש שלך');
             return;
         }
 
-        const html = results.map(post => `
-      <a href="${post.url}" class="search-result-item">
+        const html = results.map((post, index) => `
+      <a href="${post.url}" class="search-result-item" role="option" tabindex="0" aria-posinset="${index + 1}" aria-setsize="${results.length}">
         <div class="search-result-title">${highlightText(post.title, query)}</div>
         <div class="search-result-excerpt">${highlightText(post.excerpt || '', query)}</div>
         <div class="search-result-date">${formatDate(post.date)}</div>
@@ -71,6 +72,29 @@
 
         searchResults.innerHTML = html;
         searchResults.classList.remove('hidden');
+        
+        // Announce results to screen readers
+        const resultCount = results.length;
+        const announcement = resultCount === 1 
+            ? 'נמצאה תוצאה אחת. השתמש בחצים לניווט.'
+            : `נמצאו ${resultCount} תוצאות. השתמש בחצים לניווט.`;
+        announceToScreenReader(announcement);
+    }
+
+    // Screen reader announcements helper (defined early for use in displayResults)
+    function announceToScreenReader(message) {
+        let announcer = document.getElementById('sr-announcer');
+        if (!announcer) {
+            announcer = document.createElement('div');
+            announcer.id = 'sr-announcer';
+            announcer.setAttribute('aria-live', 'polite');
+            announcer.setAttribute('aria-atomic', 'true');
+            announcer.className = 'visually-hidden';
+            document.body.appendChild(announcer);
+        }
+        announcer.textContent = message;
+        // Clear after announcement
+        setTimeout(() => { announcer.textContent = ''; }, 1000);
     }
 
     // Handle search input
@@ -90,19 +114,60 @@
     function handleClickOutside(event) {
         if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
             searchResults.classList.add('hidden');
+            announceToScreenReader('תוצאות חיפוש נסגרו');
         }
     }
 
     // Toggle search on mobile
     function toggleSearch() {
         const searchContainer = document.getElementById('search-container');
+        const searchToggle = document.getElementById('search-toggle');
         const isActive = searchContainer.classList.toggle('active');
+        
+        // Update aria-expanded for accessibility
+        if (searchToggle) {
+            searchToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        }
         
         if (isActive) {
             searchInput.focus();
+            announceToScreenReader('חיפוש נפתח');
         } else {
             searchInput.value = '';
             searchResults.classList.add('hidden');
+            announceToScreenReader('חיפוש נסגר');
+        }
+    }
+
+    // Keyboard navigation for search results
+    function handleSearchKeyboard(event) {
+        const results = searchResults.querySelectorAll('.search-result-item');
+        if (results.length === 0) return;
+        
+        const currentIndex = Array.from(results).findIndex(r => r === document.activeElement);
+        
+        switch (event.key) {
+            case 'ArrowDown':
+                event.preventDefault();
+                if (document.activeElement === searchInput) {
+                    results[0].focus();
+                } else if (currentIndex < results.length - 1) {
+                    results[currentIndex + 1].focus();
+                }
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                if (currentIndex > 0) {
+                    results[currentIndex - 1].focus();
+                } else if (currentIndex === 0) {
+                    searchInput.focus();
+                }
+                break;
+            case 'Escape':
+                searchResults.classList.add('hidden');
+                searchInput.focus();
+                announceToScreenReader('תוצאות חיפוש נסגרו');
+                break;
         }
     }
 
@@ -119,6 +184,8 @@
 
         // Add event listeners
         searchInput.addEventListener('input', handleSearch);
+        searchInput.addEventListener('keydown', handleSearchKeyboard);
+        searchResults.addEventListener('keydown', handleSearchKeyboard);
         document.addEventListener('click', handleClickOutside);
         
         // Mobile search toggle

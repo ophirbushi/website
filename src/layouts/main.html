@@ -62,13 +62,15 @@
 </head>
 
 <body>
-  <nav>
+  <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+  
+  <nav role="navigation" aria-label="ניווט ראשי">
     <div class="nav-inner">
 
-      <a href="/" class="logo" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+      <a href="/" class="logo" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;" aria-label="ישוע בלוג - דף הבית">
 
         <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"
-          style="height: 28px; width: 28px;" alt="לוגו ישוע בלוג" class="logo-svg">
+          style="height: 28px; width: 28px;" aria-hidden="true" focusable="false" class="logo-svg">
           <circle cx="256" cy="256" r="256" fill="#A04000" />
           <g transform="translate(40, 0)">
             <path
@@ -77,40 +79,42 @@
           </g>
         </svg>
 
-        <span class="site-title">
+        <span class="site-title" aria-hidden="true">
           ישוע בלוג
         </span>
       </a>
 
       <!-- <a href="/" class="logo">ישוע בלוג</a> -->
       <div class="nav-links">
-        <a href="https://bible.new/read/" target="_blank" rel="noopener" class="nav-bible-link" data-track-category="Navigation" data-track-action="Click" data-track-name="Bible Link">📖 לכתובים</a>
+        <a href="https://bible.new/read/" target="_blank" rel="noopener" class="nav-bible-link" data-track-category="Navigation" data-track-action="Click" data-track-name="Bible Link">📖 לכתובים<span class="visually-hidden"> (נפתח בחלון חדש)</span></a>
         <a href="/blog.html" data-track-category="Navigation" data-track-action="Click" data-track-name="Blog">הבלוג</a>
-        <button class="search-toggle" id="search-toggle" aria-label="חיפוש" data-track-category="Search" data-track-action="Toggle" data-track-name="Search Button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="search-toggle" id="search-toggle" aria-label="פתח חיפוש" aria-expanded="false" aria-controls="search-container" data-track-category="Search" data-track-action="Toggle" data-track-name="Search Button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
           </svg>
         </button>
-        <div class="search-container" id="search-container" style="margin-left: 0;">
-          <input type="search" id="search-input" placeholder="חיפוש..." autocomplete="off">
-          <div id="search-results" class="search-results hidden"></div>
+        <div class="search-container" id="search-container" style="margin-left: 0;" role="search">
+          <label for="search-input" class="visually-hidden">חיפוש באתר</label>
+          <input type="search" id="search-input" placeholder="חיפוש..." autocomplete="off" aria-describedby="search-hint">
+          <span id="search-hint" class="visually-hidden">הקלד לפחות 2 תווים לחיפוש</span>
+          <div id="search-results" class="search-results hidden" role="listbox" aria-label="תוצאות חיפוש"></div>
         </div>
       </div>
     </div>
   </nav>
 
-  <main>
+  <main id="main-content" role="main">
     {{content}}
   </main>
-  <footer data-matomo-name="footer-section">
+  <footer data-matomo-name="footer-section" role="contentinfo">
     <div class="footer-content">
       <div class="footer-section footer-links-section">
         <h3>קישורים מומלצים</h3>
-        <div class="footer-links">
-          <a href="https://www.yeshuanekuda.co.il/" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="Yeshua Nekuda">ישוע נקודה</a>
-          <a href="https://www.youtube.com/@yeshua_nekuda" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="YouTube Channel">ערוץ היוטיוב</a>
-          <a href="https://igod.co.il/" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="iGod">אייגוד</a>
+        <div class="footer-links" role="navigation" aria-label="קישורים חיצוניים">
+          <a href="https://www.yeshuanekuda.co.il/" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="Yeshua Nekuda">ישוע נקודה<span class="visually-hidden"> (נפתח בחלון חדש)</span></a>
+          <a href="https://www.youtube.com/@yeshua_nekuda" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="YouTube Channel">ערוץ היוטיוב<span class="visually-hidden"> (נפתח בחלון חדש)</span></a>
+          <a href="https://igod.co.il/" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="iGod">אייגוד<span class="visually-hidden"> (נפתח בחלון חדש)</span></a>
         </div>
       </div>
       <!-- 
