@@ -212,14 +212,287 @@
         window.addEventListener('scroll', requestTick, { passive: true });
     }
 
+    // ========================================
+    // MATOMO TRACKING
+    // ========================================
+    
+    // Helper function to track events
+    function trackEvent(category, action, name, value) {
+        if (typeof _paq !== 'undefined') {
+            _paq.push(['trackEvent', category, action, name, value]);
+        }
+    }
+
+    // Track CTA clicks
+    function initCTATracking() {
+        // Primary CTA buttons
+        document.querySelectorAll('.cta-btn, .cta-btn.primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const btnText = this.textContent.trim();
+                const href = this.getAttribute('href') || '';
+                trackEvent('CTA', 'Click', btnText, null);
+            });
+        });
+
+        // Hero links (external site links)
+        document.querySelectorAll('.hero-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const linkText = this.querySelector('span')?.textContent || this.textContent.trim();
+                const href = this.getAttribute('href') || '';
+                trackEvent('Hero Link', 'Click', linkText, null);
+            });
+        });
+
+        // Partner links in go-deeper section
+        document.querySelectorAll('.partner-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const linkText = this.textContent.trim();
+                trackEvent('Partner Link', 'Click', linkText, null);
+            });
+        });
+
+        // "See all posts" link
+        document.querySelectorAll('.see-all').forEach(link => {
+            link.addEventListener('click', function() {
+                trackEvent('Navigation', 'Click', 'See All Posts', null);
+            });
+        });
+
+        // Back to blog link
+        document.querySelectorAll('.back-link').forEach(link => {
+            link.addEventListener('click', function() {
+                trackEvent('Navigation', 'Click', 'Back to Blog', null);
+            });
+        });
+
+        // Post card clicks
+        document.querySelectorAll('.post-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const postTitle = this.querySelector('h3, h2')?.textContent || 'Unknown Post';
+                trackEvent('Post Card', 'Click', postTitle, null);
+            });
+        });
+
+        // Footer links
+        document.querySelectorAll('.footer-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const linkText = this.textContent.trim();
+                trackEvent('Footer Link', 'Click', linkText, null);
+            });
+        });
+
+        // Navigation links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const linkText = this.textContent.trim();
+                const isExternal = this.getAttribute('target') === '_blank';
+                trackEvent('Navigation', 'Click', linkText, isExternal ? 1 : 0);
+            });
+        });
+
+        // Logo click
+        document.querySelectorAll('.logo').forEach(logo => {
+            logo.addEventListener('click', function() {
+                trackEvent('Navigation', 'Click', 'Logo/Home', null);
+            });
+        });
+
+        // Related posts clicks
+        document.querySelectorAll('.related-posts-grid .post-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const postTitle = this.querySelector('h3, h2')?.textContent || 'Unknown Post';
+                trackEvent('Related Posts', 'Click', postTitle, null);
+            });
+        });
+    }
+
+    // Track search interactions
+    function initSearchTracking() {
+        const searchInput = document.getElementById('search-input');
+        const searchToggle = document.getElementById('search-toggle');
+        let searchDebounce = null;
+
+        if (searchToggle) {
+            searchToggle.addEventListener('click', function() {
+                trackEvent('Search', 'Toggle', 'Search Opened', null);
+            });
+        }
+
+        if (searchInput) {
+            // Track when user performs a search (debounced)
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchDebounce);
+                const query = this.value.trim();
+                
+                if (query.length >= 2) {
+                    searchDebounce = setTimeout(() => {
+                        trackEvent('Search', 'Query', query, query.length);
+                        // Also use Matomo's built-in site search tracking
+                        if (typeof _paq !== 'undefined') {
+                            _paq.push(['trackSiteSearch', query, false, false]);
+                        }
+                    }, 1000); // Wait 1 second after typing stops
+                }
+            });
+
+            // Track search result clicks
+            document.addEventListener('click', function(e) {
+                const resultItem = e.target.closest('.search-result-item');
+                if (resultItem) {
+                    const title = resultItem.querySelector('.search-result-title')?.textContent || 'Unknown';
+                    trackEvent('Search', 'Result Click', title, null);
+                }
+            });
+        }
+    }
+
+    // Track scroll depth on article pages
+    function initScrollTracking() {
+        const article = document.querySelector('.article-content, article, .post-content');
+        if (!article) return;
+
+        const milestones = [25, 50, 75, 100];
+        const trackedMilestones = new Set();
+        let ticking = false;
+
+        function checkScrollDepth() {
+            const articleRect = article.getBoundingClientRect();
+            const articleTop = window.scrollY + articleRect.top;
+            const articleHeight = article.offsetHeight;
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const articleEnd = articleTop + articleHeight;
+            
+            const percentScrolled = Math.min(100, Math.round(
+                ((scrollPosition - articleTop) / articleHeight) * 100
+            ));
+
+            milestones.forEach(milestone => {
+                if (percentScrolled >= milestone && !trackedMilestones.has(milestone)) {
+                    trackedMilestones.add(milestone);
+                    const pageTitle = document.title.split('|')[0].trim();
+                    trackEvent('Scroll Depth', `${milestone}%`, pageTitle, milestone);
+                }
+            });
+
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(checkScrollDepth);
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+
+    // Track content impressions using Intersection Observer
+    function initContentImpressions() {
+        if (typeof _paq === 'undefined') return;
+
+        // Enable content tracking in Matomo
+        _paq.push(['enableHeartBeatTimer']);
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5 // Element is 50% visible
+        };
+
+        const trackedElements = new Set();
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const elementId = el.dataset.trackId || el.className;
+                    
+                    if (!trackedElements.has(el)) {
+                        trackedElements.add(el);
+                        
+                        const contentName = el.dataset.trackName || getContentName(el);
+                        const contentPiece = el.dataset.trackPiece || 'default';
+                        
+                        trackEvent('Content Impression', 'View', contentName, null);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Track specific elements
+        const elementsToTrack = [
+            { selector: '.hero', name: 'Hero Section' },
+            { selector: '.go-deeper-cta', name: 'Go Deeper CTA' },
+            { selector: '.related-posts', name: 'Related Posts Section' },
+            { selector: '.recent-posts', name: 'Recent Posts Section' },
+            { selector: '.article-content, article, .post-content', name: 'Article Content' },
+            { selector: '.hero-links', name: 'Hero Links' },
+            { selector: '.cta-grid', name: 'CTA Grid' },
+            { selector: '.footer-content', name: 'Footer' }
+        ];
+
+        elementsToTrack.forEach(({ selector, name }) => {
+            document.querySelectorAll(selector).forEach(el => {
+                el.dataset.trackName = name;
+                observer.observe(el);
+            });
+        });
+
+        // Track individual post cards impression
+        document.querySelectorAll('.post-card').forEach((card, index) => {
+            const postTitle = card.querySelector('h3, h2')?.textContent || `Post ${index + 1}`;
+            card.dataset.trackName = `Post Card: ${postTitle}`;
+            observer.observe(card);
+        });
+    }
+
+    function getContentName(el) {
+        if (el.classList.contains('hero')) return 'Hero Section';
+        if (el.classList.contains('go-deeper-cta')) return 'Go Deeper CTA';
+        if (el.classList.contains('related-posts')) return 'Related Posts';
+        if (el.classList.contains('post-card')) {
+            const title = el.querySelector('h3, h2')?.textContent;
+            return title ? `Post Card: ${title}` : 'Post Card';
+        }
+        return el.className || 'Unknown Element';
+    }
+
+    // Track time on page for articles
+    function initTimeOnPageTracking() {
+        const article = document.querySelector('.article-content, article, .post-content');
+        if (!article) return;
+
+        const startTime = Date.now();
+        const pageTitle = document.title.split('|')[0].trim();
+
+        // Track when user leaves the page
+        window.addEventListener('beforeunload', function() {
+            const timeSpent = Math.round((Date.now() - startTime) / 1000);
+            // Use sendBeacon for reliable tracking on page exit
+            if (typeof _paq !== 'undefined') {
+                _paq.push(['trackEvent', 'Engagement', 'Time on Article', pageTitle, timeSpent]);
+            }
+        });
+    }
+
+    // Initialize all Matomo tracking
+    function initMatomoTracking() {
+        initCTATracking();
+        initSearchTracking();
+        initScrollTracking();
+        initContentImpressions();
+        initTimeOnPageTracking();
+    }
+
     // Run when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             init();
             handleStickyNav();
+            initMatomoTracking();
         });
     } else {
         init();
         handleStickyNav();
+        initMatomoTracking();
     }
 })();
