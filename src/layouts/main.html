@@ -106,11 +106,19 @@
     {{content}}
 
     <div class="a11y-menu">
-      <button id="a11y-toggle" aria-label="Open Accessibility Menu">♿</button>
+      <button id="a11y-toggle" aria-label="פתח תפריט נגישות" title="נגישות">
+        <img src="/accessibility.png" width="56" height="56" alt="נגישות">
+      </button>
       <div id="a11y-panel" class="hidden">
-        <button onclick="resizeText(1)">+א</button>
-        <button onclick="resizeText(-1)">-א</button>
-        <button onclick="toggleContrast()">ניגודיות</button>
+        <button onclick="resizeText(1)" aria-label="הגדל טקסט" title="הגדל טקסט">
+          <span>+</span> הגדל טקסט
+        </button>
+        <button onclick="resizeText(-1)" aria-label="הקטן טקסט" title="הקטן טקסט">
+          <span>−</span> הקטן טקסט
+        </button>
+        <button onclick="toggleContrast()" aria-label="החלף ניגודיות גבוהה" title="ניגודיות גבוהה">
+          <span>◐</span> ניגודיות
+        </button>
       </div>
     </div>
 

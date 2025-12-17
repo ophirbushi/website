@@ -1,19 +1,197 @@
-/* Menu Styling */
+/* === Accessibility Menu === */
 .a11y-menu {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 24px;
+  left: 24px;
   z-index: 1000;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 12px;
+  direction: ltr;
 }
 
+/* Toggle Button */
+#a11y-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: white;
+  color: var(--surface);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+#a11y-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+#a11y-toggle:active {
+  transform: scale(0.95);
+}
+
+#a11y-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px #2262dd;
+}
+
+/* When panel is open, add border to toggle */
+#a11y-toggle:not(:focus) {
+  box-shadow: var(--shadow-lg);
+}
+
+#a11y-panel:not(.hidden)~#a11y-toggle {
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px #2262dd;
+}
+
+#a11y-panel:not(.hidden)~#a11y-toggle:hover {
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px #2262dd;
+}
+
+/* Panel */
 #a11y-panel {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 8px;
   background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 10px;
+  border: 2px solid var(--border);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#a11y-panel.hidden {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+/* Panel Buttons */
+#a11y-panel button {
+  padding: 12px 16px;
+  background: var(--widget-bg);
+  color: var(--text);
+  border: 2px solid var(--border);
   border-radius: 8px;
-  box-shadow: var(--shadow-md);
+  font-size: var(--font-lg);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+#a11y-panel button span {
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+#a11y-panel button:hover span {
+  transform: scale(1.2);
+}
+
+#a11y-panel button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, #2262dd 10%, transparent 90%);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+#a11y-panel button:hover {
+  background: var(--surface);
+  border-color: #2262dd;
+  color: #2262dd;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+#a11y-panel button:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+#a11y-panel button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+#a11y-panel button:focus {
+  outline: none;
+  border-color: #2262dd;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #2262dd 20%, transparent 80%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .a11y-menu {
+    bottom: 16px;
+    left: 16px;
+  }
+
+  #a11y-toggle {
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+    opacity: 1;
+  }
+
+  /* Transparent when scrolling down */
+  #a11y-toggle.scrolling-down {
+    opacity: 0.3;
+  }
+
+  /* Opaque when scrolling up or menu is open */
+  #a11y-toggle.scrolling-up,
+  #a11y-toggle.menu-open {
+    opacity: 1 !important;
+  }
+
+  #a11y-toggle>img {
+    width: 48px;
+    height: 48px;
+  }
+
+  #a11y-panel {
+    min-width: 180px;
+    padding: 12px;
+  }
+
+  #a11y-panel button {
+    padding: 10px 14px;
+    font-size: var(--font-md);
+  }
+}
+
+/* High contrast adjustments */
+body.high-contrast #a11y-toggle {
+  border: 3px solid var(--text);
+}
+
+body.high-contrast #a11y-panel button {
+  border-width: 3px;
 }
