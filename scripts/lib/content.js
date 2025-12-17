@@ -376,11 +376,15 @@ ${indentedContent}
   const layout = readFile(layoutPath);
   const title = [metadata.title || (postData && postData.title), 'ישוע בלוג'].filter(seg => seg).join(' | ');
   const description = metadata.description || '';
+  
+  // Determine OG image: use post thumbnail if available, otherwise fallback
+  const image = (postData && postData.thumbnail) || '/images/photo-1519681393784-d120267933ba.jpg';
 
   // Render the page
   return renderTemplate(processedContent, layout, partialsDir, posts, {
     title,
     description,
+    image,
     year: new Date().getFullYear(),
     currentPostUrl: postData ? postData.url : null,
     useGrid
