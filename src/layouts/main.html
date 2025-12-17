@@ -2,10 +2,11 @@
 <html lang="he" dir="rtl">
 
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles/main.css">
 
   <meta name="description"
@@ -21,7 +22,42 @@
   <meta property="og:description"
     content="גלו אמיתות מקראיות, את בשורת ישוע המשיח ותובנות לחיים. הצטרפו למסע של אמונה." />
 
-  <meta property="og:image" content="https://yeshuablog.netlify.app/assets/favicon.svg" />
+  <meta property="og:image" content="https://yeshuablog.netlify.app/favicon.svg" />
+
+  <!-- Matomo -->
+  <!-- <script>
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var u = "//gray-oarfish.pikapod.net/";
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
+      _paq.push(['setSiteId', '1']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+    })();
+  </script> -->
+
+  <script>
+    var _paq = window._paq = window._paq || [];
+    /* 1. DISABLE COOKIES (Privacy Mode) */
+    _paq.push(['disableCookies']);
+
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      /* 2. PROXY URL (Points to your own domain) */
+      var u = "/";
+
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
+      _paq.push(['setSiteId', '1']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+    })();
+  </script>
+  <!-- End Matomo Code -->
+
 </head>
 
 <body>

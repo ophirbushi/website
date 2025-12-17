@@ -68,18 +68,19 @@ function copyJs(srcDir, publicDir) {
   }
 }
 
+
+/** copy directly to public */
 function copyStaticAssetsDir(srcDir, publicDir) {
   const assetsDir = path.join(srcDir, 'assets');
-  const publicAssetsDir = path.join(publicDir, 'assets');
 
-  ensureDir(publicAssetsDir);
+  ensureDir(publicDir);
 
   if (fs.existsSync(assetsDir)) {
     const files = fs.readdirSync(assetsDir);
     files.forEach(file => {
       fs.copyFileSync(
         path.join(assetsDir, file),
-        path.join(publicAssetsDir, file)
+        path.join(publicDir, file)
       );
     });
   }
