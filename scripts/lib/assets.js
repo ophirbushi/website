@@ -78,12 +78,49 @@ function copyStaticAssetsDir(srcDir, publicDir) {
   if (fs.existsSync(assetsDir)) {
     const files = fs.readdirSync(assetsDir);
     files.forEach(file => {
-      fs.copyFileSync(
-        path.join(assetsDir, file),
-        path.join(publicDir, file)
-      );
+      const srcPath = path.join(assetsDir, file);
+      const destPath = path.join(publicDir, file);
+      
+      const stat = fs.statSync(srcPath);
+      
+      if (stat.isDirectory()) {
+        // Recursively copy directory
+        ensureDir(destPath);
+        const subFiles = fs.readdirSync(srcPath);
+        subFiles.forEach(subFile => {
+          const subSrcPath = path.join(srcPath, subFile);
+          const subDestPath = path.join(destPath, subFile);
+          
+          if (fs.statSync(subSrcPath).isDirectory()) {
+            // For deeper nesting, use recursive copy
+            copyDirRecursive(subSrcPath, subDestPath);
+          } else {
+            fs.copyFileSync(subSrcPath, subDestPath);
+          }
+        });
+      } else {
+        // Copy file
+        fs.copyFileSync(srcPath, destPath);
+      }
     });
   }
+}
+
+// Helper to recursively copy directories
+function copyDirRecursive(src, dest) {
+  ensureDir(dest);
+  const entries = fs.readdirSync(src);
+  
+  entries.forEach(entry => {
+    const srcPath = path.join(src, entry);
+    const destPath = path.join(dest, entry);
+    
+    if (fs.statSync(srcPath).isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  });
 }
 
 // Copy all static assets
