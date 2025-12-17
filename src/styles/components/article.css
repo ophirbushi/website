@@ -3,6 +3,12 @@ article {
     max-width: 100%;
 }
 
+@media (max-width: 768px) {
+    article {
+        margin-top: var(--space-lg);
+    }
+}
+
 article header {
     margin-bottom: var(--space-md);
     padding-bottom: var(--space-md);

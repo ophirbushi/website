@@ -144,6 +144,10 @@ nav.hiding {
 
 /* Responsive */
 @media (max-width: 768px) {
+    nav {
+        margin-bottom: 0;
+    }
+
     .nav-links>*:not(.nav-bible-link) {
         margin: 0;
     }
