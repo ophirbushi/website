@@ -9,7 +9,7 @@
     --accent-hover: #903A00;
     --accent-light: #F6E9E0;
     --border: #e0e0e0;
-    
+
     --gold-1: #EED79F;
     --gold-2: #C9A245;
     --gold-3: #B38F3D;
@@ -20,7 +20,7 @@
 
     /* Layout */
     --max-width: 800px;
-    
+
     /* Shadows */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -32,4 +32,27 @@
     --space-md: 2rem;
     --space-lg: 3rem;
     --space-xl: 4rem;
+
+    /* Typography Scale - All scale with --font-scale */
+    --font-scale: 1;
+    --font-xs: calc(0.8rem * var(--font-scale));
+    --font-sm: calc(0.85rem * var(--font-scale));
+    --font-base: calc(0.9rem * var(--font-scale));
+    --font-md: calc(0.95rem * var(--font-scale));
+    --font-lg: calc(1rem * var(--font-scale));
+    --font-xl: calc(1.05rem * var(--font-scale));
+    --font-2xl: calc(1.1rem * var(--font-scale));
+    --font-3xl: calc(1.15rem * var(--font-scale));
+    --font-4xl: calc(1.25rem * var(--font-scale));
+    --font-5xl: calc(1.5rem * var(--font-scale));
+    --font-6xl: calc(1.75rem * var(--font-scale));
+    --font-7xl: calc(2rem * var(--font-scale));
+    --font-8xl: calc(2.5rem * var(--font-scale));
+
+    /* Neutral Colors (for hardcoded values) */
+    --surface: #ffffff;
+    --surface-alt: #fafafa;
+    --code-bg: #f0f0f0;
+    --code-bg-hover: #e8e8e8;
+    --border-light: #ccc;
 }

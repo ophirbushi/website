@@ -39,7 +39,7 @@
       g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
     })();
   </script> -->
-  
+
   <script>
     var _paq = window._paq = window._paq || [];
     /* 1. DISABLE COOKIES (Privacy Mode) */
@@ -84,9 +84,11 @@
 
       <!-- <a href="/" class="logo">ישוע בלוג</a> -->
       <div class="nav-links">
-        <a href="https://bible.new/read/" target="_blank" rel="noopener" class="nav-bible-link" data-track-category="Navigation" data-track-action="Click" data-track-name="Bible Link">📖 לכתובים</a>
+        <a href="https://bible.new/read/" target="_blank" rel="noopener" class="nav-bible-link"
+          data-track-category="Navigation" data-track-action="Click" data-track-name="Bible Link">📖 לכתובים</a>
         <a href="/blog.html" data-track-category="Navigation" data-track-action="Click" data-track-name="Blog">הבלוג</a>
-        <button class="search-toggle" id="search-toggle" aria-label="חיפוש" data-track-category="Search" data-track-action="Toggle" data-track-name="Search Button">
+        <button class="search-toggle" id="search-toggle" aria-label="חיפוש" data-track-category="Search"
+          data-track-action="Toggle" data-track-name="Search Button">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
@@ -102,15 +104,28 @@
 
   <main>
     {{content}}
+
+    <div class="a11y-menu">
+      <button id="a11y-toggle" aria-label="Open Accessibility Menu">♿</button>
+      <div id="a11y-panel" class="hidden">
+        <button onclick="resizeText(1)">+א</button>
+        <button onclick="resizeText(-1)">-א</button>
+        <button onclick="toggleContrast()">ניגודיות</button>
+      </div>
+    </div>
+
   </main>
   <footer data-matomo-name="footer-section">
     <div class="footer-content">
       <div class="footer-section footer-links-section">
         <h3>קישורים מומלצים</h3>
         <div class="footer-links">
-          <a href="https://www.yeshuanekuda.co.il/" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="Yeshua Nekuda">ישוע נקודה</a>
-          <a href="https://www.youtube.com/@yeshua_nekuda" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="YouTube Channel">ערוץ היוטיוב</a>
-          <a href="https://igod.co.il/" target="_blank" rel="noopener" data-track-category="Footer" data-track-action="Click" data-track-name="iGod">אייגוד</a>
+          <a href="https://www.yeshuanekuda.co.il/" target="_blank" rel="noopener" data-track-category="Footer"
+            data-track-action="Click" data-track-name="Yeshua Nekuda">ישוע נקודה</a>
+          <a href="https://www.youtube.com/@yeshua_nekuda" target="_blank" rel="noopener" data-track-category="Footer"
+            data-track-action="Click" data-track-name="YouTube Channel">ערוץ היוטיוב</a>
+          <a href="https://igod.co.il/" target="_blank" rel="noopener" data-track-category="Footer"
+            data-track-action="Click" data-track-name="iGod">אייגוד</a>
         </div>
       </div>
       <!-- 
@@ -124,6 +139,7 @@
     </div>
   </footer>
 
+  <script src="/js/a11y.js"></script>
   <script src="/js/main.js"></script>
 </body>
 

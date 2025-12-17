@@ -39,7 +39,7 @@ article h1 {
 
 article .meta {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: var(--font-base);
 }
 
 article>img {
@@ -62,7 +62,7 @@ article p>img {
 
 .prose h2 {
     color: var(--text);
-    font-size: 1.25rem;
+    font-size: var(--font-4xl);
     margin: var(--space-lg) 0 var(--space-sm);
     padding-bottom: var(--space-xs);
     border-bottom: 2px solid var(--border);
@@ -81,13 +81,13 @@ article p>img {
 
 .prose h3 {
     color: var(--text);
-    font-size: 1.1rem;
+    font-size: var(--font-2xl);
     margin: var(--space-md) 0 var(--space-sm);
     font-weight: 600;
 }
 
 .prose code {
-    background: #f0f0f0;
+    background: var(--code-bg);
     padding: 0.15rem 0.4rem;
     border-radius: 3px;
     font-size: 0.9em;
@@ -95,11 +95,11 @@ article p>img {
 }
 
 .prose code:hover {
-    background: #e8e8e8;
+    background: var(--code-bg-hover);
 }
 
 .prose pre {
-    background: #f0f0f0;
+    background: var(--code-bg);
     padding: var(--space-sm);
     border-radius: 4px;
     overflow-x: auto;
@@ -152,7 +152,7 @@ body[dir="rtl"] .prose blockquote {
     margin-top: var(--space-md);
     padding: 0.75rem 1.5rem;
     color: var(--text);
-    background: white;
+    background: var(--surface);
     border: 2px solid var(--border);
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
@@ -172,7 +172,7 @@ body[dir="rtl"] .prose blockquote {
     box-shadow: var(--shadow-md);
     transform: translateX(4px);
     text-decoration: none;
-    background: color-mix(in srgb, var(--accent) 5%, white 95%);
+    background: color-mix(in srgb, var(--accent) 5%, var(--surface) 95%);
 }
 
 .back-link:hover::before {

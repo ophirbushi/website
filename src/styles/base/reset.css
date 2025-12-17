@@ -30,6 +30,24 @@ body {
     margin: 0;
     padding: 0;
     animation: fadeIn 0.5s ease-in;
+    font-size: calc(16px * var(--font-scale));
+}
+
+/* High Contrast Mode overrides */
+body.high-contrast {
+  --bg: #000000;
+  --text: #ffff00; /* Yellow on Black is standard for high contrast */
+  --text-muted: #ffff99;
+  --surface: #1a1a1a;
+  --surface-alt: #2a2a2a;
+  --widget-bg: #1a1a1a;
+  --border: #ffff00;
+  --border-light: #ffff99;
+  --accent: #ffff00;
+  --accent-hover: #ffff99;
+  --accent-light: #333300;
+  --code-bg: #1a1a1a;
+  --code-bg-hover: #2a2a2a;
 }
 
 @keyframes fadeIn {

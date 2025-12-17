@@ -64,7 +64,7 @@
 
 .post-date {
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
     font-variant-numeric: tabular-nums;
     transition: color 0.2s ease;
 }
@@ -85,7 +85,7 @@
 }
 
 .post-grid li {
-    background: white;
+    background: var(--surface);
     border-radius: 16px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
@@ -149,7 +149,7 @@
 }
 
 .post-card-title {
-    font-size: 1.25rem;
+    font-size: var(--font-4xl);
     font-weight: 600;
     margin-bottom: 0.5rem;
     line-height: 1.4;
@@ -162,14 +162,14 @@
 
 .post-card-date {
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-size: var(--font-base);
     margin-top: auto;
     padding-top: var(--space-sm);
 }
 
 .post-card-excerpt {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: var(--font-md);
     line-height: 1.6;
     margin-top: 0.5rem;
     display: -webkit-box;
@@ -188,10 +188,10 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
-    font-size: 1rem;
+    font-size: var(--font-lg);
     padding: 0.875rem 2rem;
     background: var(--accent);
-    color: white;
+    color: var(--surface);
     border: 2px solid var(--accent);
     border-radius: 12px;
     box-shadow: var(--shadow-md);

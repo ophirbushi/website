@@ -11,14 +11,14 @@
 }
 
 .related-posts-header h2 {
-    font-size: 1.75rem;
+    font-size: var(--font-6xl);
     margin-bottom: var(--space-xs);
     color: var(--text);
 }
 
 .related-posts-header p {
     color: var(--text-muted);
-    font-size: 1rem;
+    font-size: var(--font-lg);
 }
 
 .related-posts-grid {
@@ -31,13 +31,13 @@
 }
 
 .related-posts .post-card-title {
-    font-size: 1.1rem;
+    font-size: var(--font-2xl);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .related-posts-header h2 {
-        font-size: 1.5rem;
+        font-size: var(--font-5xl);
     }
     
     .related-posts .post-card-image {

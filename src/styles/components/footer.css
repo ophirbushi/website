@@ -5,7 +5,7 @@ footer {
     border-top: 1px solid var(--border);
     background: var(--widget-bg);
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
 }
 
 .footer-content {
@@ -17,7 +17,7 @@ footer {
 }
 
 .footer-section h3 {
-    font-size: 0.95rem;
+    font-size: var(--font-md);
     font-weight: 600;
     color: var(--text);
     margin-bottom: var(--space-sm);
@@ -27,7 +27,7 @@ footer {
 
 .footer-about p {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: var(--font-base);
     line-height: 1.6;
 }
 
@@ -40,7 +40,7 @@ footer {
 .footer-links a,
 .footer-social a {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: var(--font-base);
     transition: all 0.2s ease;
     display: inline-block;
 }

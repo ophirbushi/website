@@ -23,7 +23,7 @@
 #search-input {
     width: 100%;
     padding: 0.75rem 1rem;
-    font-size: 1rem;
+    font-size: var(--font-lg);
     border: 2px solid var(--border);
     border-radius: 8px;
     background: var(--bg);
@@ -43,7 +43,7 @@
     left: 0;
     right: 0;
     max-height: 400px;
-    background: white;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
     overflow-y: auto;
@@ -88,13 +88,13 @@
 }
 
 .search-result-excerpt {
-    font-size: 0.9rem;
+    font-size: var(--font-base);
     color: var(--text-muted);
     margin-bottom: 0.25rem;
 }
 
 .search-result-date {
-    font-size: 0.8rem;
+    font-size: var(--font-xs);
     color: var(--text-muted);
 }
 

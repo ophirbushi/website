@@ -11,7 +11,7 @@
 
 .blog-hero h1 {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: var(--font-8xl);
     margin-bottom: var(--space-sm);
     animation: slideUp 0.6s ease-out;
 }
@@ -30,7 +30,7 @@
 .blog-description {
     text-align: center;
     color: var(--text-muted);
-    font-size: 1.1rem;
+    font-size: var(--font-2xl);
     line-height: 1.7;
     max-width: 700px;
     margin: 0 auto;
@@ -50,10 +50,10 @@
     }
     
     .blog-hero h1 {
-        font-size: 2rem;
+        font-size: var(--font-7xl);
     }
 
     .blog-description {
-        font-size: 1.05rem;
+        font-size: var(--font-xl);
     }
 }

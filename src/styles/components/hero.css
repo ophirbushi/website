@@ -28,9 +28,9 @@
     height: 120px;
     border-radius: 50%;
     overflow: hidden;
-    border: 4px solid white;
+    border: 4px solid var(--surface);
     box-shadow: var(--shadow-md);
-    background: white;
+    background: var(--surface);
     animation: fadeInScale 0.6s ease-out;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .hero h1 {
-    font-size: 2.5rem;
+    font-size: var(--font-8xl);
     margin: 0;
     color: var(--text);
     animation: slideUp 0.6s ease-out 0.1s both;
@@ -80,7 +80,7 @@
 }
 
 .hero-description {
-    font-size: 1.15rem;
+    font-size: var(--font-3xl);
     line-height: 1.7;
     color: var(--text-muted);
     margin: var(--space-md) auto;
@@ -101,7 +101,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: white;
+    background: var(--surface);
     border: 2px solid color-mix(in srgb, var(--accent) 20%, transparent 80%);
     border-radius: 12px;
     color: var(--text);
@@ -119,7 +119,7 @@
     box-shadow: var(--shadow-md);
     border-color: var(--accent);
     text-decoration: none;
-    background: color-mix(in srgb, var(--accent) 5%, white 95%);
+    background: color-mix(in srgb, var(--accent) 5%, var(--surface) 95%);
 }
 
 .hero-link:hover svg {
@@ -141,11 +141,11 @@
     }
 
     .hero h1 {
-        font-size: 2rem;
+        font-size: var(--font-7xl);
     }
 
     .hero-description {
-        font-size: 1.05rem;
+        font-size: var(--font-xl);
     }
 
     .profile-image {
