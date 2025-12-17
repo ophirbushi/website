@@ -1,4 +1,4 @@
-> https://yeshuablog.netlify.app/
+> https://yeshuablog.me/
 > 
 > hey please check out my blog.
 > 
