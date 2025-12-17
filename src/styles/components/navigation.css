@@ -148,6 +148,14 @@ nav.hiding {
         margin-bottom: 0;
     }
 
+    nav.sticky {
+        margin-bottom: 0;
+    }
+
+    article nav {
+        margin-bottom: var(--space-lg);
+    }
+
     .nav-links>*:not(.nav-bible-link) {
         margin: 0;
     }

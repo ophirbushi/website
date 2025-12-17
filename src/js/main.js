@@ -161,11 +161,13 @@
         placeholder.style.display = 'none';
         nav.parentNode.insertBefore(placeholder, nav);
 
-        // Measure nav total height including margins when it's in normal position
-        const navStyles = window.getComputedStyle(nav);
-        const originalNavHeight = nav.offsetHeight;
-        const marginBottom = parseFloat(navStyles.marginBottom);
-        const totalHeight = originalNavHeight + marginBottom;
+        // Function to get current nav height including margins
+        function getNavTotalHeight() {
+            const navStyles = window.getComputedStyle(nav);
+            const originalNavHeight = nav.offsetHeight;
+            const marginBottom = parseFloat(navStyles.marginBottom);
+            return originalNavHeight + marginBottom;
+        }
 
         let isSticky = false;
         let ticking = false;
@@ -179,8 +181,8 @@
             if (!isSticky && currentScrollY > showThreshold) {
                 isSticky = true;
                 
-                // Set placeholder to exact total height including margin
-                placeholder.style.height = totalHeight + 'px';
+                // Set placeholder to current total height (recalculated for responsive)
+                placeholder.style.height = getNavTotalHeight() + 'px';
                 placeholder.style.display = 'block';
                 
                 nav.classList.add('sticky');
