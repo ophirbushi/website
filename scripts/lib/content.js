@@ -185,7 +185,7 @@ function generatePostGrid(posts, limit = null) {
 ${postsToShow.map(post => `  <li>
     <a href="${post.url}">
       <div class="post-card-image">
-        ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}" loading="lazy" w="800">` : `<svg class="post-card-image-placeholder" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}" loading="lazy" width="800">` : `<svg class="post-card-image-placeholder" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
           <circle cx="9" cy="9" r="2"/>
           <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
@@ -310,7 +310,7 @@ function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = n
     htmlContent = htmlContent.replace(/<img\s+([^>]*?)>/g, (match, attrs) => {
       // Only add if not already present
       if (!attrs.includes('loading=')) {
-        return `<img ${attrs} loading="lazy" w="800">`;
+        return `<img ${attrs} loading="lazy" width="800">`;
       }
       return match;
     });
