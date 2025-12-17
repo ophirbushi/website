@@ -3,10 +3,10 @@
 תאריך: 14-12-2025
 תקציר: סליחה היא לא מתנה למי שפגע בנו, אלא המפתח לחירות שלנו. איך משחררים את המשא הכבד של הכעס?
 תגיות: סליחה, ריפוי, חירות
-מזעורית: https://images.unsplash.com/photo-1505189014261-0148f9aefa85?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&fit=crop
+מזעורית: https://images.unsplash.com/photo-1505189014261-0148f9aefa85
 ---
 
-![ידיים פתוחות לשמיים](https://images.unsplash.com/photo-1505189014261-0148f9aefa85?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&fit=crop)
+![ידיים פתוחות לשמיים](https://images.unsplash.com/photo-1505189014261-0148f9aefa85)
 
 להחזיק טינה זה כמו לשתות רעל ולצפות שהאדם השני ימות. אנחנו נוטים לחשוב שאם נסלח, זה אומר שאנחנו מסכימים עם מה שנעשה לנו או ממעיטים בחומרת הפגיעה. אבל האמת היא שסליחה היא אקט של גבורה פנימית – החלטה לא לתת לעבר להמשיך ולנהל את ההווה שלנו.
 
