@@ -379,12 +379,16 @@ ${indentedContent}
   
   // Determine OG image: use post thumbnail if available, otherwise fallback
   const image = (postData && postData.thumbnail) || '/images/photo-1519681393784-d120267933ba.jpg';
+  
+  // Determine current URL
+  const url = postData ? postData.url : (pagePath.endsWith('index.html') ? '/' : '/' + path.basename(pagePath));
 
   // Render the page
   return renderTemplate(processedContent, layout, partialsDir, posts, {
     title,
     description,
     image,
+    url,
     year: new Date().getFullYear(),
     currentPostUrl: postData ? postData.url : null,
     useGrid
