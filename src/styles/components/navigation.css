@@ -158,7 +158,7 @@ nav.hiding {
     }
 
     .nav-links {
-        gap: .5rem;
+        gap: .75rem;
     }
 
     .nav-links>*:not(.nav-bible-link) {
