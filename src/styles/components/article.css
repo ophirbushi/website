@@ -40,7 +40,6 @@ article {
 }
 
 .about-text {
-    /* text-align: center; */
     max-width: var(--max-width);
     margin: 0 auto;
 }
