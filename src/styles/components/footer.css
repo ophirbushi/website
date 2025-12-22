@@ -1,6 +1,6 @@
 /* === Footer === */
 footer {
-    margin-top: var(--space-xl);
+    margin-top: var(--space-lg);
     padding: var(--space-xl) var(--space-md);
     border-top: 1px solid var(--border);
     background: var(--widget-bg);
@@ -66,6 +66,28 @@ footer {
 .footer-bottom p {
     color: var(--text-muted);
     font-size: 0.85rem;
+}
+
+.footer-copyright {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+@media (min-width: 769px) {
+    .footer-copyright {
+        text-align: initial;
+        max-width: var(--max-width);
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.footer-copyright p {
+    color: var(--text-muted);
+    font-size: var(--font-sm);
+    margin: 0;
 }
 
 /* Responsive */
