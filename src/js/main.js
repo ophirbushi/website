@@ -134,9 +134,6 @@
                 toggleSearch();
             });
         }
-        
-        // Note: Outside click and Escape key handling for mobile search 
-        // is done in initHamburgerMenu() to properly manage history state
 
         // Focus search on '/' key
         document.addEventListener('keydown', (e) => {
@@ -225,26 +222,17 @@
         // Check if mobile
         const isMobile = () => window.innerWidth <= 768;
         
-        // Track number of history states we've pushed (to properly clean up)
-        let historyDepth = 0;
-        
-        // Helper to close menu without triggering back navigation
-        function closeMenu(useHistoryBack = false) {
+        // Helper to close menu
+        function closeMenu() {
             if (!mobileMenu.classList.contains('active')) return;
             
             mobileMenu.classList.remove('active');
             hamburger.classList.remove('active');
             hamburger.setAttribute('aria-expanded', 'false');
-            
-            // If closing normally (not via back button), go back to clean up history
-            if (!useHistoryBack && historyDepth > 0) {
-                historyDepth--;
-                window.history.back();
-            }
         }
         
-        // Helper to close search without triggering back navigation
-        function closeSearch(useHistoryBack = false) {
+        // Helper to close search
+        function closeSearch() {
             if (!searchContainer?.classList.contains('active')) return;
             
             searchContainer.classList.remove('active');
@@ -252,12 +240,6 @@
             if (searchInput) {
                 searchInput.value = '';
                 document.getElementById('search-results')?.classList.add('hidden');
-            }
-            
-            // If closing normally (not via back button), go back to clean up history
-            if (!useHistoryBack && historyDepth > 0) {
-                historyDepth--;
-                window.history.back();
             }
         }
         
@@ -270,36 +252,8 @@
                 mobileMenu.classList.add('active');
                 hamburger.classList.add('active');
                 hamburger.setAttribute('aria-expanded', 'true');
-                
-                // Push a state to history when opening menu (only on mobile)
-                if (isMobile()) {
-                    window.history.pushState({ overlay: 'menu' }, '');
-                    historyDepth++;
-                }
             } else {
                 closeMenu();
-            }
-        });
-        
-        // Handle back button to close menu or search (only on mobile)
-        window.addEventListener('popstate', (e) => {
-            if (!isMobile()) return;
-            
-            // Decrease our tracking counter since we just went back
-            if (historyDepth > 0) {
-                historyDepth--;
-            }
-            
-            // Close search if it's open (search is on top of menu)
-            if (searchContainer?.classList.contains('active')) {
-                closeSearch(true); // true = we're already going back, don't call history.back()
-                return;
-            }
-            
-            // Close menu if it's open
-            if (mobileMenu.classList.contains('active')) {
-                closeMenu(true); // true = we're already going back, don't call history.back()
-                return;
             }
         });
         
@@ -316,8 +270,7 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Close menu first - but we'll reuse its history state for search
-                // So don't use closeMenu() which would pop history
+                // Close menu first
                 mobileMenu.classList.remove('active');
                 hamburger.classList.remove('active');
                 hamburger.setAttribute('aria-expanded', 'false');
@@ -325,12 +278,6 @@
                 // Open search container and focus input
                 if (searchContainer) {
                     searchContainer.classList.add('active');
-                    
-                    // If we don't have a history state yet, push one
-                    if (historyDepth === 0 && isMobile()) {
-                        window.history.pushState({ overlay: 'search' }, '');
-                        historyDepth++;
-                    }
                     
                     // Focus after animation
                     const searchInput = document.getElementById('search-input');
