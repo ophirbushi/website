@@ -235,7 +235,6 @@
             mobileMenu.classList.remove('active');
             hamburger.classList.remove('active');
             hamburger.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
             
             // If closing normally (not via back button), go back to clean up history
             if (!useHistoryBack && historyDepth > 0) {
@@ -263,14 +262,14 @@
         }
         
         // Toggle mobile menu
-        hamburger.addEventListener('click', () => {
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
             const willOpen = !mobileMenu.classList.contains('active');
             
             if (willOpen) {
                 mobileMenu.classList.add('active');
                 hamburger.classList.add('active');
                 hamburger.setAttribute('aria-expanded', 'true');
-                document.body.style.overflow = 'hidden';
                 
                 // Push a state to history when opening menu (only on mobile)
                 if (isMobile()) {
@@ -322,7 +321,6 @@
                 mobileMenu.classList.remove('active');
                 hamburger.classList.remove('active');
                 hamburger.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
                 
                 // Open search container and focus input
                 if (searchContainer) {
@@ -356,10 +354,18 @@
             }
         });
         
-        // Handle clicking outside search to close it (cleanup history properly)
+        // Handle clicking outside to close menu or search
         document.addEventListener('click', (e) => {
             if (!isMobile()) return;
             
+            // Close menu if clicking outside
+            if (mobileMenu.classList.contains('active')) {
+                if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                    closeMenu();
+                }
+            }
+            
+            // Close search if clicking outside
             const searchToggle = document.getElementById('search-toggle');
             if (searchContainer?.classList.contains('active')) {
                 if (!searchContainer.contains(e.target) && 

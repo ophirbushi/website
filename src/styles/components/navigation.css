@@ -17,6 +17,7 @@ nav {
     white-space: nowrap;
     border-bottom: 1px solid var(--border);
     transition: padding 0.2s ease;
+    position: relative;
 }
 
 /* Sticky nav when scrolling */
@@ -211,95 +212,77 @@ nav.hiding {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.hamburger:hover {
+    background: var(--gold-1);
 }
 
 .hamburger span {
     display: block;
-    width: 26px;
+    width: 22px;
     height: 2px;
     background: var(--text);
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.2s ease;
     border-radius: 2px;
-    position: relative;
 }
 
-.hamburger.active {
-    justify-content: center;
-}
-
-.hamburger.active span {
-    position: absolute;
-}
-
-.hamburger.active span:nth-child(1) {
-    transform: rotate(45deg);
-}
-
-.hamburger.active span:nth-child(2) {
-    opacity: 0;
-    transform: scale(0);
-}
-
-.hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg);
-}
-
-/* Mobile Menu */
+/* Mobile Menu - Dropdown Style */
 .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 0;
+    position: absolute;
+    top: 100%;
     left: 0;
-    width: 100%;
-    height: 100vh;
+    width: 220px;
     background: var(--bg);
-    z-index: 99; /* מתחת ל-search (98) כשהוא לא פעיל */
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 99;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    padding-top: 80px; /* Account for nav bar */
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    margin-top: 0.5rem;
+    display: none;
 }
 
 .mobile-menu.active {
     opacity: 1;
     visibility: visible;
+    transform: translateY(0);
 }
 
 .mobile-menu-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100%;
-    gap: 1.5rem;
-    padding: 3rem 2rem;
+    padding: 0.5rem;
 }
 
 .mobile-menu-content a,
 .mobile-menu-content button {
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: var(--text);
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     background: none;
     border: none;
     cursor: pointer;
     font-family: inherit;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
     width: 100%;
-    max-width: 300px;
-    justify-content: center;
+    text-align: right;
 }
 
 .mobile-menu-content a:hover,
 .mobile-menu-content button:hover {
     color: var(--accent);
     background: var(--gold-1);
-    transform: translateY(-2px);
 }
 
 /* Desktop nav - show by default */
