@@ -268,16 +268,21 @@
             }
         });
         
-        // Track when search is opened (only on mobile)
+        // Track when search is opened (only on mobile and from mobile menu)
         if (searchContainer) {
-            const originalToggleSearch = window.toggleSearch;
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.attributeName === 'class') {
                         const isActive = searchContainer.classList.contains('active');
+                        // Only track if mobile AND it's being opened (not closed)
                         if (isActive && !searchWasOpened && isMobile()) {
-                            window.history.pushState({ searchOpen: true }, '');
-                            searchWasOpened = true;
+                            // Only add history state if opened from mobile menu toggle
+                            // We'll set a flag in the mobile search toggle click handler
+                            if (searchContainer.dataset.openedFromMobileMenu === 'true') {
+                                window.history.pushState({ searchOpen: true }, '');
+                                searchWasOpened = true;
+                                searchContainer.dataset.openedFromMobileMenu = 'false';
+                            }
                         } else if (!isActive) {
                             searchWasOpened = false;
                         }
@@ -293,7 +298,6 @@
             
             // Close search if it's open
             if (searchWasOpened && searchContainer?.classList.contains('active')) {
-                e.preventDefault();
                 searchContainer.classList.remove('active');
                 const searchInput = document.getElementById('search-input');
                 if (searchInput) {
@@ -301,19 +305,18 @@
                     document.getElementById('search-results')?.classList.add('hidden');
                 }
                 searchWasOpened = false;
-                // Push state back to prevent actual navigation
-                window.history.pushState({ searchOpen: false }, '');
+                // Don't push new state - just close
+                return;
             }
             // Close menu if it's open
-            else if (menuWasOpened && mobileMenu.classList.contains('active')) {
-                e.preventDefault();
+            if (menuWasOpened && mobileMenu.classList.contains('active')) {
                 mobileMenu.classList.remove('active');
                 hamburger.classList.remove('active');
                 hamburger.setAttribute('aria-expanded', 'false');
                 document.body.style.overflow = '';
                 menuWasOpened = false;
-                // Push state back to prevent actual navigation
-                window.history.pushState({ mobileMenuOpen: false }, '');
+                // Don't push new state - just close
+                return;
             }
         });
         
@@ -340,6 +343,9 @@
                 hamburger.setAttribute('aria-expanded', 'false');
                 document.body.style.overflow = '';
                 
+                // Clear menu flag since we're closing it to open search
+                menuWasOpened = false;
+                
                 // Open search container and focus input
                 const searchContainer = document.getElementById('search-container');
                 const searchInput = document.getElementById('search-input');
@@ -348,6 +354,9 @@
                 console.log('Has active class before:', searchContainer?.classList.contains('active')); // Debug
                 
                 if (searchContainer && searchInput) {
+                    // Mark that search is being opened from mobile menu
+                    searchContainer.dataset.openedFromMobileMenu = 'true';
+                    
                     searchContainer.classList.add('active');
                     console.log('Has active class after:', searchContainer.classList.contains('active')); // Debug
                     console.log('Container classes:', searchContainer.className); // Debug
