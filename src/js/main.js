@@ -99,7 +99,12 @@
         const isActive = searchContainer.classList.toggle('active');
         
         if (isActive) {
-            searchInput.focus();
+            // Wait for animation and ensure element is visible before focusing
+            setTimeout(() => {
+                if (searchInput && typeof searchInput.focus === 'function') {
+                    searchInput.focus();
+                }
+            }, 350);
         } else {
             searchInput.value = '';
             searchResults.classList.add('hidden');
@@ -147,6 +152,16 @@
             if (e.key === '/' && document.activeElement !== searchInput) {
                 e.preventDefault();
                 searchInput.focus();
+            }
+            
+            // Close search on Escape key (mobile)
+            if (e.key === 'Escape') {
+                const searchContainer = document.getElementById('search-container');
+                if (searchContainer && searchContainer.classList.contains('active')) {
+                    searchContainer.classList.remove('active');
+                    searchInput.value = '';
+                    searchResults.classList.add('hidden');
+                }
             }
         });
     }
@@ -212,6 +227,152 @@
         }
 
         window.addEventListener('scroll', requestTick, { passive: true });
+    }
+
+    // ========================================
+    // HAMBURGER MENU
+    // ========================================
+    
+    function initHamburgerMenu() {
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+        const searchContainer = document.getElementById('search-container');
+        
+        if (!hamburger || !mobileMenu) return;
+        
+        // Check if mobile
+        const isMobile = () => window.innerWidth <= 768;
+        
+        // Track if menu/search was opened to handle back button
+        let menuWasOpened = false;
+        let searchWasOpened = false;
+        
+        // Toggle mobile menu
+        hamburger.addEventListener('click', () => {
+            const isActive = mobileMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isActive);
+            
+            // Prevent body scroll when menu is open
+            if (isActive) {
+                document.body.style.overflow = 'hidden';
+                // Push a state to history when opening menu (only on mobile)
+                if (isMobile()) {
+                    window.history.pushState({ mobileMenuOpen: true }, '');
+                    menuWasOpened = true;
+                }
+            } else {
+                document.body.style.overflow = '';
+                menuWasOpened = false;
+            }
+        });
+        
+        // Track when search is opened (only on mobile)
+        if (searchContainer) {
+            const originalToggleSearch = window.toggleSearch;
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class') {
+                        const isActive = searchContainer.classList.contains('active');
+                        if (isActive && !searchWasOpened && isMobile()) {
+                            window.history.pushState({ searchOpen: true }, '');
+                            searchWasOpened = true;
+                        } else if (!isActive) {
+                            searchWasOpened = false;
+                        }
+                    }
+                });
+            });
+            observer.observe(searchContainer, { attributes: true });
+        }
+        
+        // Handle back button to close menu or search (only on mobile)
+        window.addEventListener('popstate', (e) => {
+            if (!isMobile()) return;
+            
+            // Close search if it's open
+            if (searchWasOpened && searchContainer?.classList.contains('active')) {
+                e.preventDefault();
+                searchContainer.classList.remove('active');
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) {
+                    searchInput.value = '';
+                    document.getElementById('search-results')?.classList.add('hidden');
+                }
+                searchWasOpened = false;
+                // Push state back to prevent actual navigation
+                window.history.pushState({ searchOpen: false }, '');
+            }
+            // Close menu if it's open
+            else if (menuWasOpened && mobileMenu.classList.contains('active')) {
+                e.preventDefault();
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+                menuWasOpened = false;
+                // Push state back to prevent actual navigation
+                window.history.pushState({ mobileMenuOpen: false }, '');
+            }
+        });
+        
+        // Close menu when clicking on a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Mobile search toggle - focus search and close menu
+        if (mobileSearchToggle) {
+            mobileSearchToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('Mobile search clicked'); // Debug
+                
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+                
+                // Open search container and focus input
+                const searchContainer = document.getElementById('search-container');
+                const searchInput = document.getElementById('search-input');
+                
+                console.log('Search container:', searchContainer); // Debug
+                console.log('Has active class before:', searchContainer?.classList.contains('active')); // Debug
+                
+                if (searchContainer && searchInput) {
+                    searchContainer.classList.add('active');
+                    console.log('Has active class after:', searchContainer.classList.contains('active')); // Debug
+                    console.log('Container classes:', searchContainer.className); // Debug
+                    
+                    // Focus after animation
+                    setTimeout(() => {
+                        searchInput.focus();
+                    }, 350);
+                } else {
+                    console.log('Search elements not found!'); // Debug
+                }
+            });
+        } else {
+            console.log('Mobile search toggle not found!'); // Debug
+        }
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        });
     }
 
     // ========================================
@@ -490,11 +651,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             init();
             handleStickyNav();
+            initHamburgerMenu();
             initMatomoTracking();
         });
     } else {
         init();
         handleStickyNav();
+        initHamburgerMenu();
         initMatomoTracking();
     }
 })();

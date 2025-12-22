@@ -19,6 +19,14 @@
 .search-container {
     position: relative;
     max-width: 600px;
+    display: none; /* נסתר בברירת מחדל */
+}
+
+/* Show on desktop when not hidden */
+@media (min-width: 769px) {
+    .search-container {
+        display: block;
+    }
 }
 
 #search-input {
@@ -40,7 +48,7 @@
 
 .search-results {
     position: absolute;
-    top: calc(100% + 0.5rem);
+    top: 100%;
     left: 0;
     right: 0;
     max-height: 400px;
@@ -120,20 +128,36 @@ mark {
     }
     
     .search-container {
+        display: block !important; /* תמיד נראה במובייל */
         position: fixed;
-        top: 0;
+        top: 65px; /* מתחת ל-nav */
         left: 0;
         right: 0;
         padding: 1rem;
         background: var(--bg);
-        box-shadow: var(--shadow-md);
-        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 100; /* מעל mobile menu */
         max-width: 100%;
-        transform: translateY(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
     }
     
     .search-container.active {
+        opacity: 1 !important;
+        visibility: visible !important;
         transform: translateY(0);
+        pointer-events: all;
+    }
+    
+    #search-input {
+        font-size: var(--font-base);
+        padding: 0.65rem 1rem;
+    }
+    
+    .search-results {
+        max-height: 60vh;
     }
 }
