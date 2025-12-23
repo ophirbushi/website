@@ -29,7 +29,7 @@ main>article {
 }
 
 .recent-posts {
-    padding-top: var(--space-lg);
+    padding-top: var(--space-md);
     background: var(--bg);
 }
 
@@ -42,6 +42,6 @@ main>article {
 .recent-posts h2 {
     text-align: center;
     font-size: var(--font-7xl);
-    margin-bottom: 0;
+    margin-bottom: var(--space-md);
     color: var(--text);
 }

@@ -410,7 +410,7 @@
         });
 
         // Related posts clicks
-        document.querySelectorAll('.related-posts-grid .post-card').forEach(card => {
+        document.querySelectorAll('.related-posts .post-card').forEach(card => {
             card.addEventListener('click', function() {
                 const postTitle = this.querySelector('h3, h2')?.textContent || 'Unknown Post';
                 trackEvent('Related Posts', 'Click', postTitle, null);
