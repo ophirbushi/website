@@ -35,7 +35,7 @@ main>article {
 
 @media (max-width: 768px) {
     .recent-posts {
-        padding-top: var(--space-md);
+        padding-top: var(--space-sm);
     }
 }
 
