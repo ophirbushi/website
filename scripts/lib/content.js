@@ -378,7 +378,7 @@ ${indentedContent}
   const description = metadata.description || '';
   
   // Determine OG image: use post thumbnail if available, otherwise fallback
-  const image = (postData && postData.thumbnail) || '/images/photo-1519681393784-d120267933ba.jpg';
+  const image = (postData && postData.thumbnail) || '/bg-extended.png';
   
   // Determine current URL
   const url = postData ? postData.url : (pagePath.endsWith('index.html') ? '/' : '/' + path.basename(pagePath));
