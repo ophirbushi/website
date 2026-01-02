@@ -99,6 +99,10 @@ article p>img {
     margin-bottom: calc(0 - var(--space-sm));
 }
 
+article figcaption {
+  color: var(--text-muted);
+}
+
 /* Prose styling */
 .prose {
     line-height: 1.7;
