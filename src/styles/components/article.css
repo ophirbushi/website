@@ -94,7 +94,8 @@ article>img {
 }
 
 article p>img {
-    margin-top: var(--space-sm);
+    /* margin-top: var(--space-sm); */
+    margin-top: 0;
     margin-bottom: calc(0 - var(--space-sm));
 }
 
