@@ -306,15 +306,31 @@ function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = n
     // Convert Markdown to HTML
     let htmlContent = marked(content);
     
-    // Add loading="lazy" to all images
+// Add loading="lazy" AND wrap in figure/figcaption
     htmlContent = htmlContent.replace(/<img\s+([^>]*?)>/g, (match, attrs) => {
-      // Only add if not already present
-      if (!attrs.includes('loading=')) {
-        return `<img ${attrs} loading="lazy" width="940">`;
+      let newAttrs = attrs;
+
+      // 1. Ensure lazy loading (existing logic)
+      if (!newAttrs.includes('loading=')) {
+        newAttrs += ' loading="lazy" width="940"';
       }
-      return match;
+
+      // 2. Extract the alt text
+      const altMatch = newAttrs.match(/alt=["'](.*?)["']/);
+      const altText = altMatch ? altMatch[1] : '';
+
+      const imgTag = `<img ${newAttrs}>`;
+
+      // 3. If alt text exists, wrap in figure with caption
+      if (altText) {
+        return `<figure>
+          ${imgTag}
+          <figcaption>${altText}</figcaption>
+        </figure>`;
+      }
+
+      return imgTag;
     });
-    
     // Extract leading image if present (for better formatting like HTML posts)
     let leadingImage = '';
     const imgMatch = htmlContent.match(/^<p>(<img[^>]+>)<\/p>\s*/);
