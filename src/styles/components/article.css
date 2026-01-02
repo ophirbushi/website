@@ -51,8 +51,8 @@ article {
 }
 
 article header {
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-sm);
     border-bottom: 2px solid var(--border);
     position: relative;
 }
@@ -101,6 +101,7 @@ article p>img {
 
 article figcaption {
   color: var(--text-muted);
+  font-size: var(--font-sm);
 }
 
 /* Prose styling */
