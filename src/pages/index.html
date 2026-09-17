@@ -1,13 +1,14 @@
 <section class="hero">
     <div class="hero-content">
+        <p class="hero-eyebrow reveal">יומן מסע על החיפוש אחר אמת</p>
         <div class="hero-profile">
-            <h1> הולכים בדרך. מוצאים אמת. בוחרים בחיים. </h1>
+            <h1 class="reveal">הולכים בדרך. מוצאים <em class="accent-word">אמת</em>. בוחרים בחיים.</h1>
         </div>
-        <p class="hero-description">
+        <p class="hero-description reveal">
             יומן מסע על החיפוש אחר אמת בעולם רועש. בלי תשובות מוכנות מראש, אלא עם רצון פשוט להבין איך הדרך של ישוע פוגשת
             אותנו בלב, בשכל ובחיים עצמם.
         </p>
-        <div class="hero-links" data-matomo-name="hero-external-links">
+        <div class="hero-links reveal" data-matomo-name="hero-external-links">
             <a href="https://igod.co.il/" target="_blank" class="hero-link igod" data-track-category="Hero"
                 data-track-action="External Link" data-track-name="iGod">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24.2" height="32" viewBox="12 8 24.2 32" fill="none"
@@ -52,9 +53,12 @@
 
 <section class="recent-posts">
     <div class="container">
-        <h2>פוסטים אחרונים</h2>
+        <div class="section-head reveal">
+            <p class="eyebrow">הבלוג</p>
+            <h2>פוסטים אחרונים</h2>
+        </div>
         {{posts:12}}
-        <div class="see-all-container">
+        <div class="see-all-container reveal">
             <a href="/blog.html" class="see-all" data-track-category="Navigation" data-track-action="Click"
                 data-track-name="See All Posts">
                 לכל הפוסטים

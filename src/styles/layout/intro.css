@@ -1,9 +1,9 @@
-/* === Intro Section === */
+/* === Intro Section (legacy / utility) === */
 .intro {
     margin-bottom: var(--space-xl);
     padding: var(--space-md);
-    background: var(--widget-bg);
-    border-radius: 16px;
+    background: var(--surface);
+    border-radius: var(--radius);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
 }
@@ -32,7 +32,7 @@
 }
 
 .highlight {
-    color: var(--accent);
+    color: var(--accent-ink);
     position: relative;
     display: inline-block;
 }
@@ -62,9 +62,9 @@
 .links a {
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
+    border-radius: 999px;
     border: 1px solid var(--border);
-    background: var(--widget-bg);
+    background: var(--surface);
     box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -72,30 +72,9 @@
     white-space: nowrap;
 }
 
-.links a::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        135deg,
-        var(--accent-light) 0%,
-        color-mix(in srgb, var(--accent-light) 10%, transparent 90%) 100%
-    );
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: -1;
-}
-
 .links a:hover {
     text-decoration: none;
     transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
     border-color: var(--accent);
-}
-
-.links a:hover::before {
-    transform: translateY(0);
+    color: var(--accent-ink);
 }

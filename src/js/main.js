@@ -595,18 +595,46 @@
         initTimeOnPageTracking();
     }
 
+    // ========================================
+    // SCROLL REVEAL
+    // ========================================
+    
+    function initReveal() {
+        const targets = document.querySelectorAll('.reveal');
+        if (!targets.length) return;
+        
+        // Respect reduced-motion preference
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            targets.forEach(el => el.classList.add('in-view'));
+            return;
+        }
+        
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        
+        targets.forEach(el => io.observe(el));
+    }
+
     // Run when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             init();
             handleStickyNav();
             initHamburgerMenu();
+            initReveal();
             initMatomoTracking();
         });
     } else {
         init();
         handleStickyNav();
         initHamburgerMenu();
+        initReveal();
         initMatomoTracking();
     }
 })();

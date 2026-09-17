@@ -1,58 +1,90 @@
-/* === CSS Variables === */
+/* === Theme: "Boker (Dawn)" — Parchment · Evergreen · Gold === */
 :root {
-    /* Colors */
-    --text: #1a1a1a;
-    --text-muted: #676767;
-    --bg: #ffffff;
-    --widget-bg: #fafafa;
-    --accent: #A04000;
-    --accent-hover: #903A00;
-    --accent-light: #F6E9E0;
-    --border: #e0e0e0;
+    /* Fonts */
+    --font-body: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Frank Ruhl Libre', 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', serif;
 
-    --gold-1: #EED79F;
+    /* Light base */
+    --bg: #F6F1E7;
+    --surface: #FFFDF8;
+    --surface-2: #EFE8D8;
+    --widget-bg: #EFE8D8; /* legacy alias */
+
+    /* Ink */
+    --text: #21251F;
+    --text-muted: #5E655B;
+    --text-faint: #8B9187;
+
+    /* Hairlines */
+    --border: #E3DACA;
+    --border-strong: #CFC5AD;
+
+    /* Dark sections (evergreen) */
+    --deep: #152B25;
+    --deep-2: #1C3A32;
+    --deep-3: #27493F;
+    --on-deep: #F3EEE1;
+    --on-deep-soft: rgba(243, 238, 225, 0.72);
+    --on-deep-faint: rgba(243, 238, 225, 0.42);
+    --deep-line: rgba(243, 238, 225, 0.14);
+
+    /* Gold accents */
+    --accent: #B98A2F;
+    --accent-hover: #9A7123;
+    --accent-2: #D3A94E;
+    --accent-ink: #7C5C19;
+    --accent-light: #EFE4C8;
+    --accent-glow: rgba(211, 169, 78, 0.16);
+
+    /* Legacy gold scale (kept for compatibility) */
+    --gold-1: #EFE4C8;
     --gold-2: #C9A245;
-    --gold-3: #B38F3D;
+    --gold-3: #7C5C19;
     --gold-4: #E0C585;
-    --aliceblue-1: #F4F8FB;
-    --aliceblue-2: #E2E8F0;
-
+    --aliceblue-1: #F6F1E7;
+    --aliceblue-2: #E3DACA;
 
     /* Layout */
-    --max-width: 1000px;
+    --max-width: 1080px;
+    --reading-width: 740px;
+
+    /* Radii */
+    --radius-sm: 10px;
+    --radius: 16px;
+    --radius-lg: 24px;
 
     /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(28, 32, 26, 0.05), 0 1px 6px rgba(28, 32, 26, 0.04);
+    --shadow-md: 0 4px 14px rgba(28, 32, 26, 0.08), 0 2px 4px rgba(28, 32, 26, 0.04);
+    --shadow-lg: 0 18px 40px rgba(28, 32, 26, 0.14), 0 6px 12px rgba(28, 32, 26, 0.06);
+    --shadow-deep: 0 24px 60px rgba(10, 22, 18, 0.35);
 
     /* Spacing System */
     --space-xs: 0.5rem;
     --space-sm: 1rem;
     --space-md: 2rem;
     --space-lg: 3rem;
-    --space-xl: 4rem;
+    --space-xl: 4.5rem;
 
     /* Typography Scale - All scale with --font-scale */
     --font-scale: 1;
-    --font-xs: calc(0.8rem * var(--font-scale));
-    --font-sm: calc(0.85rem * var(--font-scale));
-    --font-base: calc(0.9rem * var(--font-scale));
-    --font-md: calc(0.95rem * var(--font-scale));
-    --font-lg: calc(1rem * var(--font-scale));
-    --font-xl: calc(1.05rem * var(--font-scale));
-    --font-2xl: calc(1.1rem * var(--font-scale));
-    --font-3xl: calc(1.15rem * var(--font-scale));
-    --font-4xl: calc(1.25rem * var(--font-scale));
-    --font-5xl: calc(1.5rem * var(--font-scale));
-    --font-6xl: calc(1.75rem * var(--font-scale));
-    --font-7xl: calc(2rem * var(--font-scale));
-    --font-8xl: calc(2.5rem * var(--font-scale));
+    --font-xs: calc(0.78rem * var(--font-scale));
+    --font-sm: calc(0.88rem * var(--font-scale));
+    --font-base: calc(1rem * var(--font-scale));
+    --font-md: calc(1.08rem * var(--font-scale));
+    --font-lg: calc(1.2rem * var(--font-scale));
+    --font-xl: calc(1.45rem * var(--font-scale));
+    --font-2xl: calc(1.7rem * var(--font-scale));
+    --font-3xl: calc(2rem * var(--font-scale));
+    --font-4xl: calc(2.35rem * var(--font-scale));
+    --font-5xl: calc(2.8rem * var(--font-scale));
+    --font-6xl: calc(3.3rem * var(--font-scale));
+    --font-7xl: calc(clamp(2.3rem, 1.8rem + 2.2vw, 3rem) * var(--font-scale));
+    --font-8xl: calc(clamp(2.8rem, 2rem + 3.4vw, 4.4rem) * var(--font-scale));
 
     /* Neutral Colors (for hardcoded values) */
-    --surface: #ffffff;
-    --surface-alt: #fafafa;
-    --code-bg: #f0f0f0;
-    --code-bg-hover: #e8e8e8;
-    --border-light: #ccc;
+    --surface-alt: #F1EBDF;
+    --code-bg: #EDE6D6;
+    --code-bg-hover: #E4DBC6;
+    --border-light: #CFC5AD;
 }

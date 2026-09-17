@@ -19,9 +19,9 @@
   justify-content: center;
   width: 56px;
   height: 56px;
-  background: white;
-  color: var(--surface);
-  border: none;
+  background: var(--surface);
+  color: var(--deep);
+  border: 1px solid var(--border);
   border-radius: 50%;
   font-size: 1.5rem;
   cursor: pointer;

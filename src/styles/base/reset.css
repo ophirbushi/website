@@ -8,12 +8,12 @@
 }
 
 ::selection {
-    background: color-mix(in srgb, var(--accent) 30%, transparent 70%);
+    background: color-mix(in srgb, var(--accent) 35%, transparent 65%);
     color: var(--text);
 }
 
 ::-moz-selection {
-    background: color-mix(in srgb, var(--accent) 30%, transparent 70%);
+    background: color-mix(in srgb, var(--accent) 35%, transparent 65%);
     color: var(--text);
 }
 
@@ -23,31 +23,66 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
+    font-family: var(--font-body);
+    line-height: 1.65;
     color: var(--text);
     background: var(--bg);
     margin: 0;
     padding: 0;
     animation: fadeIn 0.5s ease-in;
     font-size: calc(16px * var(--font-scale));
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Subtle paper grain over the whole page (print-like finish) */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
 }
 
 /* High Contrast Mode overrides */
 body.high-contrast {
-  --bg: #000000;
-  --text: #ffff00; /* Yellow on Black is standard for high contrast */
-  --text-muted: #ffff99;
-  --surface: #1a1a1a;
-  --surface-alt: #2a2a2a;
-  --widget-bg: #1a1a1a;
-  --border: #ffff00;
-  --border-light: #ffff99;
-  --accent: #ffff00;
-  --accent-hover: #ffff99;
-  --accent-light: #333300;
-  --code-bg: #1a1a1a;
-  --code-bg-hover: #2a2a2a;
+    --bg: #000000;
+    --surface: #000000;
+    --surface-2: #111111;
+    --widget-bg: #111111;
+    --text: #ffff00; /* Yellow on Black is standard for high contrast */
+    --text-muted: #ffff99;
+    --text-faint: #dddd66;
+    --border: #ffff00;
+    --border-strong: #ffff00;
+    --border-light: #ffff99;
+    --deep: #000000;
+    --deep-2: #111111;
+    --deep-3: #1a1a00;
+    --on-deep: #ffff00;
+    --on-deep-soft: #ffff99;
+    --on-deep-faint: #cccc55;
+    --deep-line: #ffff00;
+    --accent: #ffff00;
+    --accent-hover: #ffff99;
+    --accent-2: #ffff00;
+    --accent-ink: #ffff00;
+    --accent-light: #333300;
+    --accent-glow: rgba(255, 255, 0, 0.1);
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-deep: none;
+    --code-bg: #111111;
+    --code-bg-hover: #222222;
+    --surface-alt: #111111;
+}
+
+body.high-contrast::after {
+    display: none;
 }
 
 @keyframes fadeIn {
@@ -74,4 +109,20 @@ html[dir="rtl"] body pre {
 
 img {
     max-width: 100%;
+}
+
+/* Reduced motion: calm everything down */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    body::after {
+        display: none;
+    }
 }

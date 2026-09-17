@@ -1,34 +1,56 @@
-/* === Footer === */
+/* === Footer — dark evergreen === */
 footer {
-    margin-top: var(--space-lg);
-    padding: var(--space-xl) var(--space-md);
-    border-top: 1px solid var(--border);
-    background: var(--widget-bg);
-    color: var(--text-muted);
+    margin-top: var(--space-xl);
+    padding: 3.5rem var(--space-md) 2rem;
+    background: var(--deep);
+    border-top: 1px solid var(--deep-line);
+    color: var(--on-deep-soft);
     font-size: var(--font-sm);
+    position: relative;
+}
+
+/* Thin gold hairline at the top edge */
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.55;
 }
 
 .footer-content {
     max-width: var(--max-width);
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: var(--space-lg);
 }
 
 .footer-section h3 {
-    font-size: var(--font-md);
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: var(--space-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-family: var(--font-display);
+    font-size: var(--font-base);
+    font-weight: 700;
+    color: var(--on-deep);
+    margin-bottom: 1rem;
+}
+
+.footer-section h3::after {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+    margin-top: 0.5rem;
 }
 
 .footer-about p {
-    color: var(--text-muted);
-    font-size: var(--font-base);
-    line-height: 1.6;
+    color: var(--on-deep-soft);
+    font-size: var(--font-sm);
+    line-height: 1.7;
 }
 
 .footer-links {
@@ -39,16 +61,17 @@ footer {
 
 .footer-links a,
 .footer-social a {
-    color: var(--text-muted);
-    font-size: var(--font-base);
+    color: var(--on-deep-soft);
+    font-size: var(--font-sm);
     transition: all 0.2s ease;
     display: inline-block;
 }
 
 .footer-links a:hover,
 .footer-social a:hover {
-    color: var(--accent);
+    color: var(--accent-2);
     text-decoration: none;
+    transform: translateX(-3px);
 }
 
 .footer-social {
@@ -59,19 +82,19 @@ footer {
 
 .footer-bottom {
     padding-top: var(--space-md);
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--deep-line);
     text-align: center;
 }
 
 .footer-bottom p {
-    color: var(--text-muted);
+    color: var(--on-deep-faint);
     font-size: 0.85rem;
 }
 
 .footer-copyright {
-    margin-top: var(--space-lg);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border);
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--deep-line);
     text-align: center;
 }
 
@@ -85,8 +108,8 @@ footer {
 }
 
 .footer-copyright p {
-    color: var(--text-muted);
-    font-size: var(--font-sm);
+    color: var(--on-deep-faint);
+    font-size: var(--font-xs);
     margin: 0;
 }
 

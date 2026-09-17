@@ -2,7 +2,7 @@
 .contact-content {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: var(--space-lg) var(--space-md);
+    padding: var(--space-lg) var(--space-md) var(--space-xl);
 }
 
 @media (max-width: 768px) {
@@ -14,23 +14,24 @@
     }
 }
 
-
 .contact-text {
     max-width: 800px;
     margin: 0 auto;
 }
 
 .contact-text>p {
-    font-size: var(--font-lg);
+    font-size: var(--font-md);
     margin-bottom: var(--space-lg);
     text-align: center;
+    color: var(--text-muted);
+    line-height: 1.8;
 }
 
 .contact-methods {
     font-size: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    gap: var(--space-md);
     margin-top: var(--space-md);
 }
 
@@ -38,35 +39,59 @@
     font-size: initial;
     background: var(--surface);
     padding: var(--space-md);
-    border-radius: 12px;
+    border-radius: var(--radius);
     border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+}
+
+.contact-method:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
 }
 
 .contact-method h2 {
-    color: var(--accent);
-    font-size: var(--font-xl);
+    color: var(--deep);
+    font-size: var(--font-lg);
+    font-weight: 700;
     margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.contact-method h2::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--accent);
+    flex-shrink: 0;
 }
 
 .contact-method p {
     margin-bottom: var(--space-sm);
     line-height: 1.8;
+    color: var(--text-muted);
 }
 
 .contact-email {
     display: inline-block;
-    background: var(--accent);
-    color: white;
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: 8px;
+    background: var(--deep);
+    color: var(--on-deep);
+    padding: 0.7rem 1.5rem;
+    border-radius: 999px;
     text-decoration: none;
     font-weight: 600;
+    font-size: var(--font-sm);
+    direction: ltr;
     transition: all 0.3s ease;
-    margin-top: var(--space-sm);
+    margin-top: var(--space-xs);
 }
 
 .contact-email:hover {
-    background: var(--accent-hover);
+    background: var(--deep-3);
+    color: var(--accent-2);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
@@ -78,15 +103,16 @@
 
 .contact-method ul li {
     padding: var(--space-xs) 0;
-    padding-right: var(--space-md);
+    padding-inline-start: 1.2rem;
     position: relative;
     line-height: 1.8;
+    color: var(--text-muted);
 }
 
 .contact-method ul li::before {
     content: '•';
     position: absolute;
-    right: 0;
+    inset-inline-start: 0;
     color: var(--accent);
     font-weight: bold;
 }

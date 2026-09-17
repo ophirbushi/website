@@ -182,7 +182,7 @@ function generatePostGrid(posts, limit = null) {
   const postsToShow = limit ? posts.slice(0, limit) : posts;
 
   return `<ul class="post-grid">
-${postsToShow.map(post => `  <li>
+${postsToShow.map((post, i) => `  <li class="reveal" style="transition-delay: ${Math.min(i % 3, 2) * 90}ms">
     <a href="${post.url}">
       <div class="post-card-image">
         ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}" loading="lazy" width="940">` : `<svg class="post-card-image-placeholder" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -335,7 +335,8 @@ function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = n
     let leadingImage = '';
     const imgMatch = htmlContent.match(/^<p>(<img[^>]+>)<\/p>\s*/);
     if (imgMatch) {
-      leadingImage = '    ' + imgMatch[1] + '\n\n';
+      const imgTag = imgMatch[1].startsWith('<img class=') ? imgMatch[1] : imgMatch[1].replace('<img', '<img class="reveal"');
+      leadingImage = '    ' + imgTag + '\n\n';
       htmlContent = htmlContent.replace(imgMatch[0], '');
     }
     
@@ -348,7 +349,7 @@ function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = n
     // Wrap in article structure if it's a post
     if (postData) {
       processedContent = `<article>
-    <header>
+    <header class="reveal">
         <h1>${postData.title}</h1>
         <p class="meta">${formatDate(postData.date)}</p>
     </header>
