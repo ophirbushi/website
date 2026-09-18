@@ -13,6 +13,7 @@ main {
 
 /* Article and blog pages need container constraints */
 main>article {
+    margin-top: var(--space-md);
     max-width: var(--max-width);
     margin-left: auto;
     margin-right: auto;
