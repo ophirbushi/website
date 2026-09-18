@@ -182,7 +182,7 @@ ${postsToShow.map(post => `  <li>
 </ul>`;
 }
 
-// Generate HTML for post grid (horizontal card layout)
+// Generate HTML for post grid (modern vertical card layout)
 function generatePostGrid(posts, limit = null) {
   const postsToShow = limit ? posts.slice(0, limit) : posts;
 
@@ -190,16 +190,21 @@ function generatePostGrid(posts, limit = null) {
 ${postsToShow.map(post => `  <li class="post-card">
     <a href="${post.url}">
       <div class="post-card-image">
-        ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${escapeAttr(post.title)}" loading="lazy" width="360" height="270">` : `<svg class="post-card-image-placeholder" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
-          <circle cx="9" cy="9" r="2"/>
-          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-        </svg>`}
+        ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${escapeAttr(post.title)}" loading="lazy" width="400" height="250">` : `<div class="post-card-image-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>`}
       </div>
       <div class="post-card-content">
-        <div class="post-card-title">${post.title}</div>
-        ${post.excerpt ? `<div class="post-card-excerpt">${post.excerpt}</div>` : ''}
-        <div class="post-card-date">${formatDate(post.date)}</div>
+        <h3 class="post-card-title">${post.title}</h3>
+        ${post.excerpt ? `<p class="post-card-excerpt">${post.excerpt}</p>` : ''}
+        <div class="post-card-footer">
+          <span class="post-card-date">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>${formatDate(post.date)}</span>
+          </span>
+          <span class="post-card-read-more" aria-hidden="true">
+            <span>קרא עוד</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </span>
+        </div>
       </div>
     </a>
   </li>`).join('\n')}
