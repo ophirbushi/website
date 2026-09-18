@@ -604,17 +604,17 @@
         if (!('IntersectionObserver' in window)) return;
 
         const targets = document.querySelectorAll(
-            '.post-grid li, .go-deeper-cta, .contact-method, .related-posts-header, .about-profile, .about-text p'
+            '.recent-posts h2, .post-grid .post-card, .post-grid li, .see-all-container, .go-deeper-cta, .contact-method, .related-posts-header, .about-profile, .about-text p'
         );
         if (!targets.length) return;
 
-        targets.forEach((el, i) => {
+        targets.forEach((el) => {
             el.classList.add('reveal-init');
-            // gentle stagger for grids
             const parent = el.parentElement;
             if (parent && (parent.classList.contains('post-grid') || parent.classList.contains('contact-methods'))) {
                 const siblings = Array.from(parent.children).filter(c => c.classList.contains('reveal-init'));
-                el.style.transitionDelay = `${(siblings.indexOf(el) % 3) * 70}ms`;
+                const index = siblings.indexOf(el);
+                el.style.transitionDelay = `${(index % 3) * 90}ms`;
             }
         });
 
@@ -626,7 +626,7 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
         targets.forEach(el => observer.observe(el));
     }
