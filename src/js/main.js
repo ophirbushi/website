@@ -412,7 +412,7 @@
         // Related posts clicks
         document.querySelectorAll('.related-posts .post-card').forEach(card => {
             card.addEventListener('click', function() {
-                const postTitle = this.querySelector('h3, h2')?.textContent || 'Unknown Post';
+                const postTitle = this.querySelector('.post-card-title, h3, h2')?.textContent || 'Unknown Post';
                 trackEvent('Related Posts', 'Click', postTitle, null);
             });
         });
@@ -534,7 +534,7 @@
         const elementsToTrack = [
             { selector: '.hero', name: 'Hero Section' },
             { selector: '.go-deeper-cta', name: 'Go Deeper CTA' },
-            { selector: '.related-posts', name: 'Related Posts Section' },
+            { selector: '.related-widget', name: 'Related Posts Section' },
             { selector: '.recent-posts', name: 'Recent Posts Section' },
             { selector: '.article-content, article, .post-content', name: 'Article Content' },
             { selector: '.hero-links', name: 'Hero Links' },
@@ -551,7 +551,7 @@
 
         // Track individual post cards impression
         document.querySelectorAll('.post-card').forEach((card, index) => {
-            const postTitle = card.querySelector('h3, h2')?.textContent || `Post ${index + 1}`;
+            const postTitle = card.querySelector('.post-card-title, h3, h2')?.textContent || `Post ${index + 1}`;
             card.dataset.trackName = `Post Card: ${postTitle}`;
             observer.observe(card);
         });
@@ -560,9 +560,9 @@
     function getContentName(el) {
         if (el.classList.contains('hero')) return 'Hero Section';
         if (el.classList.contains('go-deeper-cta')) return 'Go Deeper CTA';
-        if (el.classList.contains('related-posts')) return 'Related Posts';
+        if (el.classList.contains('related-widget')) return 'Related Posts';
         if (el.classList.contains('post-card')) {
-            const title = el.querySelector('h3, h2')?.textContent;
+            const title = el.querySelector('.post-card-title, h3, h2')?.textContent;
             return title ? `Post Card: ${title}` : 'Post Card';
         }
         return el.className || 'Unknown Element';

@@ -77,6 +77,11 @@ function formatDate(dateStr) {
   return `${day} ב${monthName} ${year}`;
 }
 
+// Escape attribute values so quotes inside titles don't break HTML
+function escapeAttr(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+}
+
 // Recursively find all posts in directory and subdirectories
 function findPostsRecursively(dir, baseDir, prefix = '') {
   const results = [];
@@ -177,15 +182,15 @@ ${postsToShow.map(post => `  <li>
 </ul>`;
 }
 
-// Generate HTML for post grid (card layout for homepage)
+// Generate HTML for post grid (horizontal card layout)
 function generatePostGrid(posts, limit = null) {
   const postsToShow = limit ? posts.slice(0, limit) : posts;
 
   return `<ul class="post-grid">
-${postsToShow.map(post => `  <li>
+${postsToShow.map(post => `  <li class="post-card">
     <a href="${post.url}">
       <div class="post-card-image">
-        ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${post.title}" loading="lazy" width="940">` : `<svg class="post-card-image-placeholder" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        ${post.thumbnail ? `<img src="${post.thumbnail}" alt="${escapeAttr(post.title)}" loading="lazy" width="360" height="270">` : `<svg class="post-card-image-placeholder" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
           <circle cx="9" cy="9" r="2"/>
           <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
@@ -306,32 +311,46 @@ function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = n
     // Convert Markdown to HTML
     let htmlContent = marked(content);
     
-// Add loading="lazy" AND wrap in figure/figcaption
+// Add loading="lazy" AND wrap image-only blocks in figure/figcaption
     htmlContent = htmlContent.replace(/<img\s+([^>]*?)>/g, (match, attrs) => {
       let newAttrs = attrs;
 
       // 1. Ensure lazy loading (existing logic)
       if (!newAttrs.includes('loading=')) {
-        newAttrs += ' loading="lazy" width="940"';
+        newAttrs += ' loading="lazy"';
+      }
+      if (!newAttrs.includes('width=') && !newAttrs.includes('height=')) {
+        newAttrs += ' width="940" height="530"';
       }
 
       // 2. Extract the alt text
       const altMatch = newAttrs.match(/alt=["'](.*?)["']/);
       const altText = altMatch ? altMatch[1] : '';
 
-      const imgTag = `<img ${newAttrs}>`;
+      const imgTag = `<img ${newAttrs.replace(/alt=["'](.*?)["']/, (m, a) => `alt="${escapeAttr(a)}"`)}>`;
 
-      // 3. If alt text exists, wrap in figure with caption
+      // 3. If alt text exists, wrap in figure with caption (kept inside <p> — <figure> in <p> is invalid HTML)
       if (altText) {
-        return `<figure>
+        return `<span class="post-figure">
           ${imgTag}
-          <figcaption>${altText}</figcaption>
-        </figure>`;
+          <span class="post-figcaption"><span>${altText}</span></span>
+        </span>`;
       }
 
       return imgTag;
     });
-    // Extract leading image if present (for better formatting like HTML posts)
+
+    // Promote image-only blocks out of <p> into valid <figure> elements
+    // (matches either raw <img> or the wrapped <span class="post-figure"> form)
+    htmlContent = htmlContent.replace(/<p>\s*((?:\s*(?:<span class="post-figure">[\s\S]*?<\/span>|<img\s[^>]*>))+\s*)<\/p>\s*/g, (m, inner) => {
+      const imgTags = inner.match(/<img\s[^>]*>/g) || [];
+      if (!imgTags.length) return m;
+      const withoutImgs = inner.replace(/<img\s[^>]*>/g, '');
+      const stripped = withoutImgs.replace(/<\/?span[^>]*>/g, '').trim();
+      if (stripped) return m;
+      const caption = (inner.match(/alt="([^"]+)"/) || [])[1] || '';
+      return `\n\n<figure>\n  ${imgTags.join('\n  ')}\n  ${caption ? `<figcaption>${caption}</figcaption>` : ''}\n</figure>\n`;
+    });
     let leadingImage = '';
     const imgMatch = htmlContent.match(/^<p>(<img[^>]+>)<\/p>\s*/);
     if (imgMatch) {

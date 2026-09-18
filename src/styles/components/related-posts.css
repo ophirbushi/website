@@ -1,9 +1,28 @@
 /* === Related Posts Section === */
 .related-posts {
     margin-top: var(--space-xl);
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--border);
     margin-bottom: var(--space-md);
+    padding: var(--space-lg) var(--space-lg) calc(var(--space-lg) + 1rem);
+    background:
+        radial-gradient(560px 280px at 88% 0%, rgba(201, 146, 46, 0.1), transparent 62%),
+        radial-gradient(640px 320px at 8% 0%, rgba(28, 94, 82, 0.07), transparent 62%),
+        linear-gradient(180deg, #FFFFFF 0%, var(--widget-bg) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.related-posts::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold-2), var(--accent) 55%, var(--gold-2));
+    opacity: 0.9;
 }
 
 .related-posts-header {
@@ -12,32 +31,31 @@
 }
 
 .related-posts-header h2 {
-    font-size: var(--font-5xl);
-    margin-bottom: var(--space-xs);
+    font-size: var(--font-4xl);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.35rem;
     color: var(--text);
+    position: relative;
+    padding-bottom: 0.7rem;
+}
+
+.related-posts-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold-2), var(--accent));
 }
 
 .related-posts-header p {
     color: var(--text-muted);
-    font-size: var(--font-lg);
+    font-size: var(--font-md);
+    line-height: 1.7;
 }
 
 /* Related posts in article context — slightly smaller cards */
-.related-posts .post-card-image {
-    height: 160px;
-}
-
-.related-posts .post-card-title {
-    font-size: var(--font-xl);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .related-posts-header h2 {
-        font-size: var(--font-4xl);
-    }
-
-    .related-posts .post-card-image {
-        height: 150px;
-    }
-}
