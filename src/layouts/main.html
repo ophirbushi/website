@@ -6,7 +6,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
-  <link rel="icon" href="https://yeshuablog.me/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles/main.css">
   <meta property="description"
     content="יומן מסע על החיפוש אחר אמת בעולם רועש. בלי תשובות מוכנות מראש, אלא עם רצון פשוט להבין איך הדרך של ישוע פוגשת אותנו בלב, בשכל ובחיים עצמם." />
@@ -44,6 +47,7 @@
 </head>
 
 <body>
+  <div class="progress-bar" aria-hidden="true"></div>
   <nav>
     <div class="nav-inner">
 
@@ -169,7 +173,7 @@
     </div>
 
     <div class="footer-copyright">
-      <p>© 2025 ישוע בלוג. נבנה באהבה.</p>
+      <p>© {{year}} ישוע בלוג · נבנה באהבה</p>
     </div>
   </footer>
 

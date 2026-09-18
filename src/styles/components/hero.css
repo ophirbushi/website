@@ -1,71 +1,73 @@
 /* === Hero Section === */
+
+/* Base hero — soft light gradient (About / Contact) */
 .hero {
-    background: linear-gradient(135deg,
-            var(--accent-light) 0%,
-            color-mix(in srgb, var(--accent-light) 50%, white 50%) 100%);
-    padding: var(--space-lg) var(--space-md);
-    margin-bottom: var(--space-md);
-    border-radius: 0 0 24px 24px;
-    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
+    position: relative;
+    padding: 5rem var(--space-md) 4rem;
+    background:
+        radial-gradient(700px 340px at 85% 0%, rgba(201, 146, 46, 0.1), transparent 60%),
+        radial-gradient(800px 420px at 10% 10%, rgba(28, 94, 82, 0.09), transparent 60%),
+        linear-gradient(180deg, var(--accent-soft) 0%, var(--bg) 100%);
+    overflow: hidden;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
 .hero-content {
     max-width: var(--max-width);
     margin: 0 auto;
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-md);
+    gap: var(--space-sm);
+    /* margin-bottom: var(--space-md); */
 }
 
-.profile-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid var(--surface);
-    box-shadow: var(--shadow-md);
-    background: var(--surface);
-    animation: fadeInScale 0.6s ease-out;
-}
-
-.profile-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.profile-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
+/* Kicker pill above the headline */
+.hero-kicker {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--accent-light), color-mix(in srgb, var(--accent) 20%, white 80%));
-    color: var(--accent);
+    gap: 0.5rem;
+    font-size: var(--font-sm);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.4rem 1.1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--gold-3);
+    box-shadow: var(--shadow-sm);
+    animation: slideUp 0.6s ease-out both;
 }
 
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.hero-kicker::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold-2);
 }
 
 .hero h1 {
     font-size: var(--font-8xl);
+    line-height: 1.2;
     margin: 0;
     color: var(--text);
+    font-weight: 700;
     animation: slideUp 0.6s ease-out 0.1s both;
 }
 
@@ -82,32 +84,34 @@
 }
 
 .hero-description {
-    font-size: var(--font-3xl);
-    line-height: 1.7;
+    font-size: var(--font-xl);
+    line-height: 1.8;
     color: var(--text-muted);
     margin: var(--space-md) auto;
-    max-width: 700px;
+    max-width: 680px;
     animation: slideUp 0.6s ease-out 0.2s both;
 }
 
 .hero-links {
     display: flex;
     justify-content: center;
-    gap: var(--space-sm);
+    gap: 0.75rem;
     flex-wrap: wrap;
     animation: slideUp 0.6s ease-out 0.3s both;
+    margin-top: var(--space-md);
 }
 
 .hero-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
+    gap: 0.55rem;
+    padding: 0.7rem 1.4rem;
     background: var(--surface);
-    border: 2px solid color-mix(in srgb, var(--accent) 20%, transparent 80%);
-    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
     color: var(--text);
-    font-weight: 500;
+    font-weight: 600;
+    font-size: var(--font-md);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-sm);
 }
@@ -117,15 +121,15 @@
 }
 
 .hero-link:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-md);
     border-color: var(--accent);
     text-decoration: none;
-    background: color-mix(in srgb, var(--accent) 5%, var(--surface) 95%);
+    color: var(--accent);
 }
 
 .hero-link:hover svg {
-    transform: scale(1.1);
+    transform: scale(1.12);
 }
 
 .hero-link.yeshua-nekuda:hover {
@@ -134,8 +138,8 @@
 }
 
 .hero-link.youtube:hover {
-    border-color: #ff0000;
-    color: #ff0000;
+    border-color: #ff4444;
+    color: #ff4444;
 }
 
 .hero-link.igod:hover {
@@ -143,26 +147,112 @@
     color: #DA4530;
 }
 
+/* === Cinematic hero (homepage) — photo + overlay === */
+.hero-cinematic {
+    min-height: min(80vh, 680px);
+    display: grid;
+    align-items: center;
+    padding: 6rem var(--space-md) 5rem;
+    background:
+        linear-gradient(180deg,
+            rgba(13, 19, 17, 0.55) 0%,
+            rgba(13, 19, 17, 0.28) 42%,
+            rgba(13, 19, 17, 0.72) 100%),
+        url('/images/people-walking-in-fog.jpg') center 30% / cover no-repeat var(--ink);
+}
+
+.hero-cinematic::after {
+    display: none;
+}
+
+.hero-cinematic .hero-kicker {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: var(--gold-4);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.hero-cinematic h1 {
+    color: #FDFCF9;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+    max-width: 15ch;
+}
+
+.hero-cinematic .hero-description {
+    color: rgba(253, 252, 249, 0.86);
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.4);
+}
+
+.hero-cinematic .hero-link {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #FDFCF9;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.hero-cinematic .hero-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #FFFFFF;
+}
+
+/* Scroll cue */
+.hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 42px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    padding-top: 7px;
+    opacity: 0.75;
+}
+
+.hero-scroll::before {
+    content: '';
+    width: 4px;
+    height: 9px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.85);
+    animation: scrollPulse 1.9s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(9px);
+        opacity: 0.25;
+    }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .hero {
-        padding: var(--space-lg) var(--space-md);
-        margin-top: 0;
-        margin-bottom: var(--space-md);
-        border-radius: 0 0 16px 16px;
+        padding: 3.5rem var(--space-md) 2.75rem;
+    }
+
+    .hero-cinematic {
+        min-height: min(76vh, 560px);
+        padding: 4.5rem var(--space-md) 4rem;
     }
 
     .hero h1 {
-        font-size: var(--font-7xl);
+        font-size: var(--font-6xl);
     }
 
     .hero-description {
-        font-size: var(--font-xl);
-    }
-
-    .profile-image {
-        width: 100px;
-        height: 100px;
+        font-size: var(--font-lg);
     }
 
     .hero-links {

@@ -595,6 +595,73 @@
         initTimeOnPageTracking();
     }
 
+    // ========================================
+    // SCROLL REVEAL ANIMATIONS
+    // ========================================
+
+    function initRevealOnScroll() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!('IntersectionObserver' in window)) return;
+
+        const targets = document.querySelectorAll(
+            '.post-grid li, .go-deeper-cta, .contact-method, .related-posts-header, .about-profile, .about-text p'
+        );
+        if (!targets.length) return;
+
+        targets.forEach((el, i) => {
+            el.classList.add('reveal-init');
+            // gentle stagger for grids
+            const parent = el.parentElement;
+            if (parent && (parent.classList.contains('post-grid') || parent.classList.contains('contact-methods'))) {
+                const siblings = Array.from(parent.children).filter(c => c.classList.contains('reveal-init'));
+                el.style.transitionDelay = `${(siblings.indexOf(el) % 3) * 70}ms`;
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('reveal-init');
+                    entry.target.classList.add('reveal-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        targets.forEach(el => observer.observe(el));
+    }
+
+    // ========================================
+    // READING PROGRESS BAR (article pages)
+    // ========================================
+
+    function initProgressBar() {
+        const bar = document.querySelector('.progress-bar');
+        if (!bar) return;
+        // Only show on pages with an article
+        const article = document.querySelector('main > article');
+        if (!article) return;
+
+        bar.classList.add('active');
+        let ticking = false;
+
+        function update() {
+            const total = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = total > 0 ? Math.min(1, window.scrollY / total) : 0;
+            bar.style.setProperty('--progress', progress.toFixed(4));
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                requestAnimationFrame(update);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        update();
+    }
+
     // Run when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
@@ -602,11 +669,15 @@
             handleStickyNav();
             initHamburgerMenu();
             initMatomoTracking();
+            initRevealOnScroll();
+            initProgressBar();
         });
     } else {
         init();
         handleStickyNav();
         initHamburgerMenu();
         initMatomoTracking();
+        initRevealOnScroll();
+        initProgressBar();
     }
 })();

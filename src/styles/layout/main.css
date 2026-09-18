@@ -28,20 +28,58 @@ main>article {
     width: 100%;
 }
 
+/* Section heading pattern */
 .recent-posts {
-    padding-top: var(--space-md);
-    background: var(--bg);
-}
-
-@media (max-width: 768px) {
-    .recent-posts {
-        padding-top: var(--space-sm);
-    }
+    padding: var(--space-lg) 0 var(--space-lg);
+    background: transparent;
 }
 
 .recent-posts h2 {
     text-align: center;
-    font-size: var(--font-7xl);
+    font-size: var(--font-5xl);
     margin-bottom: var(--space-md);
     color: var(--text);
+    position: relative;
+    padding-top: 0;
+}
+
+.recent-posts h2::before {
+    content: '';
+    display: block;
+    width: 44px;
+    height: 3px;
+    margin: 0 auto var(--space-sm);
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold-2), var(--accent));
+}
+
+@media (max-width: 768px) {
+    .recent-posts {
+        padding: var(--space-md) 0 var(--space-md);
+    }
+}
+
+/* Reading progress bar (article pages) */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    z-index: 200;
+    pointer-events: none;
+}
+
+.progress-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: scaleX(0);
+    transform-origin: right center;
+    background: linear-gradient(90deg, var(--gold-2), var(--gold));
+    border-radius: 0 0 0 3px;
+}
+
+.progress-bar.active::before {
+    transform: scaleX(var(--progress, 0));
 }

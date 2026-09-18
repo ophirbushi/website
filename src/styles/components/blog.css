@@ -1,19 +1,41 @@
 /* === Blog Page Styles === */
 .blog-hero {
-    background: linear-gradient(135deg, 
-        var(--accent-light) 0%, 
-        color-mix(in srgb, var(--accent-light) 50%, white 50%) 100%);
-    padding: var(--space-xl) 0;
-    margin-bottom: var(--space-md);
-    border-radius: 0 0 24px 24px;
-    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
+    position: relative;
+    background:
+        radial-gradient(640px 300px at 82% 0%, rgba(201, 146, 46, 0.1), transparent 60%),
+        radial-gradient(720px 360px at 12% 0%, rgba(28, 94, 82, 0.08), transparent 60%),
+        linear-gradient(180deg, var(--accent-soft) 0%, var(--bg) 100%);
+    padding: 4.5rem 0 3.5rem;
+    text-align: center;
+    overflow: hidden;
+}
+
+.blog-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
 .blog-hero h1 {
-    text-align: center;
     font-size: var(--font-8xl);
+    font-weight: 700;
     margin-bottom: var(--space-sm);
+    color: var(--text);
     animation: slideUp 0.6s ease-out;
+}
+
+.blog-hero h1::before {
+    content: '';
+    display: block;
+    width: 44px;
+    height: 3px;
+    margin: 0 auto var(--space-sm);
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold-2), var(--accent));
 }
 
 @keyframes slideUp {
@@ -21,6 +43,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -28,32 +51,29 @@
 }
 
 .blog-description {
-    text-align: center;
     color: var(--text-muted);
-    font-size: var(--font-2xl);
-    line-height: 1.7;
-    max-width: 700px;
+    font-size: var(--font-lg);
+    line-height: 1.8;
+    max-width: 640px;
     margin: 0 auto;
     animation: slideUp 0.6s ease-out 0.1s both;
 }
 
 .blog-posts {
-    padding-bottom: var(--space-md);
+    padding: var(--space-lg) 0 var(--space-md);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .blog-hero {
-        margin-top: 0;
-        margin-bottom: var(--space-md);
-        border-radius: 0 0 16px 16px;
+        padding: 3.25rem 0 2.5rem;
     }
-    
+
     .blog-hero h1 {
-        font-size: var(--font-7xl);
+        font-size: var(--font-6xl);
     }
 
     .blog-description {
-        font-size: var(--font-xl);
+        font-size: var(--font-lg);
     }
 }

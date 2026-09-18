@@ -8,12 +8,12 @@
 }
 
 ::selection {
-    background: color-mix(in srgb, var(--accent) 30%, transparent 70%);
+    background: color-mix(in srgb, var(--accent) 22%, transparent 78%);
     color: var(--text);
 }
 
 ::-moz-selection {
-    background: color-mix(in srgb, var(--accent) 30%, transparent 70%);
+    background: color-mix(in srgb, var(--accent) 22%, transparent 78%);
     color: var(--text);
 }
 
@@ -23,31 +23,43 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
+    font-family: var(--font-body);
+    line-height: 1.7;
     color: var(--text);
-    background: var(--bg);
+    background:
+        radial-gradient(1100px 520px at 88% -8%, rgba(28, 94, 82, 0.07), transparent 60%),
+        radial-gradient(900px 460px at 8% 4%, rgba(201, 146, 46, 0.06), transparent 55%),
+        var(--bg);
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
     animation: fadeIn 0.5s ease-in;
     font-size: calc(16px * var(--font-scale));
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 /* High Contrast Mode overrides */
 body.high-contrast {
-  --bg: #000000;
-  --text: #ffff00; /* Yellow on Black is standard for high contrast */
-  --text-muted: #ffff99;
-  --surface: #1a1a1a;
-  --surface-alt: #2a2a2a;
-  --widget-bg: #1a1a1a;
-  --border: #ffff00;
-  --border-light: #ffff99;
-  --accent: #ffff00;
-  --accent-hover: #ffff99;
-  --accent-light: #333300;
-  --code-bg: #1a1a1a;
-  --code-bg-hover: #2a2a2a;
+    --bg: #000000;
+    --text: #ffff00;
+    --text-muted: #ffff99;
+    --surface: #1a1a1a;
+    --surface-alt: #2a2a2a;
+    --widget-bg: #1a1a1a;
+    --border: #ffff00;
+    --border-light: #ffff99;
+    --accent: #ffff00;
+    --accent-hover: #ffff99;
+    --accent-light: #333300;
+    --accent-soft: #222200;
+    --gold-1: #333300;
+    --code-bg: #1a1a1a;
+    --code-bg-hover: #2a2a2a;
+}
+
+body.high-contrast {
+    background: #000000;
 }
 
 @keyframes fadeIn {
@@ -74,4 +86,13 @@ html[dir="rtl"] body pre {
 
 img {
     max-width: 100%;
+    display: block;
+}
+
+button {
+    font-family: inherit;
+}
+
+input {
+    font-family: inherit;
 }

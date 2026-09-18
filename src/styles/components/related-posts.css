@@ -2,7 +2,8 @@
 .related-posts {
     margin-top: var(--space-xl);
     padding-top: var(--space-lg);
-    border-top: 2px solid var(--border);
+    border-top: 1px solid var(--border);
+    margin-bottom: var(--space-md);
 }
 
 .related-posts-header {
@@ -11,7 +12,7 @@
 }
 
 .related-posts-header h2 {
-    font-size: var(--font-6xl);
+    font-size: var(--font-5xl);
     margin-bottom: var(--space-xs);
     color: var(--text);
 }
@@ -21,26 +22,22 @@
     font-size: var(--font-lg);
 }
 
-.related-posts {
-    margin-bottom: var(--space-md);
-}
-
-/* Related posts in article context - smaller cards */
+/* Related posts in article context — slightly smaller cards */
 .related-posts .post-card-image {
     height: 160px;
 }
 
 .related-posts .post-card-title {
-    font-size: var(--font-2xl);
+    font-size: var(--font-xl);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .related-posts-header h2 {
-        font-size: var(--font-5xl);
+        font-size: var(--font-4xl);
     }
-    
+
     .related-posts .post-card-image {
-        height: 140px;
+        height: 150px;
     }
 }
