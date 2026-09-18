@@ -83,6 +83,16 @@
     box-shadow: 0 16px 34px -8px rgba(201, 146, 46, 0.7);
 }
 
+.go-deeper-cta .cta-btn.primary.calm {
+    background: linear-gradient(135deg, #1C5E52 0%, #2E7D6F 100%);
+    color: #EAF6F1;
+    box-shadow: 0 10px 26px -8px rgba(28, 94, 82, 0.55);
+}
+
+.go-deeper-cta .cta-btn.primary.calm:hover {
+    box-shadow: 0 16px 34px -8px rgba(28, 94, 82, 0.7);
+}
+
 .go-deeper-cta .partner-links {
     display: flex;
     gap: var(--space-xs);
