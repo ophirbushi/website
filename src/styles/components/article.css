@@ -171,7 +171,8 @@ article figcaption {
     color: var(--text);
     font-size: var(--font-4xl);
     font-weight: 600;
-    margin: var(--space-lg) 0 var(--space-sm);
+    margin-bottom: var(--space-md);
+    margin-top: var(--space-lg);
     position: relative;
 }
 
