@@ -324,9 +324,6 @@ function processPage(pagePath, layoutPath, partialsDir, posts = [], postData = n
       if (!newAttrs.includes('loading=')) {
         newAttrs += ' loading="lazy"';
       }
-      if (!newAttrs.includes('width=') && !newAttrs.includes('height=')) {
-        newAttrs += ' width="940" height="530"';
-      }
 
       // 2. Extract the alt text
       const altMatch = newAttrs.match(/alt=["'](.*?)["']/);
