@@ -32,6 +32,7 @@ main>article {
 /* Section heading pattern */
 .recent-posts {
     padding: var(--space-lg) 0 var(--space-lg);
+    padding-bottom: 0;
     background: transparent;
 }
 
