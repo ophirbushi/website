@@ -237,6 +237,11 @@ article figcaption {
     padding-inline-start: 1.5rem;
 }
 
+.prose blockquote ul,
+.prose blockquote ol {
+    margin-bottom: 0;
+}
+
 .prose li {
     margin-bottom: 0.5rem;
 }
