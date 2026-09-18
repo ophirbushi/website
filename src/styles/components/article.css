@@ -158,7 +158,7 @@ article figcaption {
 /* Prose styling */
 .prose {
     line-height: 1.9;
-    max-width: 47rem;
+    /* max-width: 47rem; */
     margin-inline: auto;
 }
 
