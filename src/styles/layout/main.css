@@ -1,7 +1,6 @@
 /* === Main Content Layout === */
 main {
     min-height: 58vh;
-    /* overflow-x: hidden; */
 }
 
 /* Container for content that should respect max-width */
